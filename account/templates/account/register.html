@@ -1,0 +1,35 @@
+{% extends 'afriventapp/layout.html' %}
+{% load static %}
+
+{% block body %}
+
+    <main>
+
+        <section class="sign-in-container"> 
+            <div class="afri_text_background">
+
+                <h2>AFRIVENT</h2>
+
+            </div>
+
+                <form class="account-form container" action="" method="POST">
+                    {% csrf_token %}
+                        <div class="form-group col-md-12">
+                            {%  include 'account/includes/form.html' %}
+                        </div>
+                 
+                        <div class="align_center ">
+                        <button type="submit" class="btn btn-primary account_btn">Sign Up</button>
+                    </div>  
+                    <div class="align_center afri_text_color ">
+                    <a class="align_center afri_text_color " href="{% url 'account:login'%}"> Sign In </a> | 
+                    <a class="align_center afri_text_color" href="#">Forgot Password? </a>
+                </div>
+
+                </form>
+        </section>
+   
+
+    </main>
+
+{% endblock %}
