@@ -4,7 +4,7 @@ from .models import Event, EventTicket, UserProfile
 
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
-    list_display = ('name', 'creator')
+    list_display = ('event_name', 'creator')
     # prepopulated_fields = ('slug')
 
 

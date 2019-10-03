@@ -1,0 +1,84 @@
+{% extends 'afriventapp/layout.html' %}
+{% load static %}
+{% load event_extras %}
+{% block title%} {{user_profile.user.first_name | title }} Create Event | Afrivent {% endblock %}
+    {% block body %}
+<section class="container">
+<form method="POST" id="createEvent" enctype="multipart/form-data">
+    {% csrf_token %} 
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="EventName">Event Name:</label>
+        <input type="text" class="form-control" name="event_name" id="EventName" placeholder="Enter the name/title of the Evemt" required>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="address">Location: </label>
+        <input type="text" class="form-control" name="address" id="address" 
+        placeholder="Enter the address where the Event
+         will be held" required>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="eventImage">Event Image: </label>
+      <input type="file" class="form-control-file" name="event_image" id="eventImage"required>
+    </div>
+    
+      <div class="form-group">
+        <label for="description">Event Description</label>
+        <textarea class="form-control" id="description" name="description" placeholder="Enter the event Description " required></textarea>
+      </div>
+      <div class="form-row">
+      <div class="form-group col-md-3">
+        <label for="startDateTime">Event Start Date</label>
+        <input type="date" class="form-control" name="start_date" id="startDateTime" required>
+      </div>
+      <div class="form-group col-md-3">
+          <label for="startDateTime">Event Start Time</label>
+          <input type="time" class="form-control" name="start_time" id="startDateTime" required>
+        </div>
+
+      <div class="form-group col-md-3">
+        <label for="endDateTime">Event End date</label>
+        <input type="date" class="form-control" name="end_date" id="endDateTime" required> 
+      </div>
+
+      <div class="form-group col-md-3">
+          <label for="startDateTime">Event End Time</label>
+          <input type="time" class="form-control" name="end_time" id="startDateTime" required>
+        </div>
+
+    </div>
+    <hr>
+    <h2>Create Ticket</h2>
+
+    <div id="event-ticket-form"> 
+    <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="ticketType">Ticket Type</label>
+          <input type="text" class="form-control ticketType" name="type" placeholder="Regular..." required>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="quantity">Quantity Available</label>
+            <input type="number" class="form-control quantityInput" name="quantity" required placeholder="50" id="quantity" required>
+          </div>
+        <div class="form-group col-md-2">
+          <label for="amount">Amount</label>
+          <input type="number" class="form-control amountInput" name="amount" required placeholder="50.00" id="amount" required>
+        </div>
+        <button type="button"  class=" close closeTicket"  aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+
+
+    </div>
+    
+      <button id="addticket" class="btn btn-danger">Add more Ticket</button>
+    </div>
+    <div class="text-center">
+    <button type="submit" class="btn btn-primary createEventBtn">Create Event</button>
+    </div>
+  </form>
+</section>
+
+  {% endblock %}

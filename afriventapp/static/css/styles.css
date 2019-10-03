@@ -401,3 +401,15 @@ h5{
     /* display: inline; */
     margin-bottom: 0;
 }
+
+#addticket{
+    display: block;
+    float: right;
+}
+
+.createEventBtn{
+    /* display: block; */
+    clear: both;
+    margin: 50px 0 20px 0;
+
+}

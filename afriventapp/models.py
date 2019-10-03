@@ -32,14 +32,16 @@ class UserProfile(models.Model):
 
 
 class Event(models.Model):
-    name = models.CharField("Enter name for Event", max_length=500)
+    event_name = models.CharField("Enter name for Event", max_length=500)
     creator = models.ForeignKey(UserProfile, related_name='events_created', on_delete=models.CASCADE)
     address = models.TextField(max_length=5000)
     event_image = models.ImageField(upload_to='images')
     description = models.TextField(max_length=50000)
-    start_date_time = models.DateTimeField(auto_now=False, auto_now_add=False, null= True)
-    end_date_time = models.DateTimeField(auto_now=False, auto_now_add=False, null= True)
-    slug = models.SlugField()  
+    start_date = models.DateField(auto_now=False, auto_now_add=False, null= True)
+    start_time = models.TimeField(auto_now=False, auto_now_add=False, null= True)
+    end_date = models.DateField(auto_now=False, auto_now_add=False, null= True)
+    end_time = models.TimeField(auto_now=False, auto_now_add=False, null= True)
+    slug = models.SlugField(blank = True, null = True)  
 
 
     class Meta:
@@ -47,7 +49,7 @@ class Event(models.Model):
         verbose_name_plural = _("Events")
 
     def __str__(self):
-        return self.name
+        return self.event_name
 
     def get_absolute_url(self):
         return reverse("afrivent:event-detail", kwargs={"slug": self.slug})

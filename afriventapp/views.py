@@ -1,10 +1,12 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, HttpResponseRedirect, reverse
 from .models import Event, EventTicket, UserProfile
 from django.views.generic import ListView, DetailView
 from django.db.models import Max, Min
 from order.models import Order, OrderItem
 import json
 from django.http import JsonResponse
+from django.http import HttpResponse
+from afriventapp.forms import EventForm, TicketForm
 
 def home(request):
     events = Event.objects.all()
@@ -69,3 +71,38 @@ def event_order_details(request, eventId):
         {'orderDetails':list(orderDetails)}
         # {'totalOrderPrice': sum(list(totalOrderPrice))}
         )
+
+
+def createEventForm(request):
+    return render(request, 'afriventapp/create-event.html')
+
+def eventCreated(request):
+    if request.method == 'POST':
+        queryDict = request.POST
+        ticketType = queryDict.getlist('type')
+        ticketAmount = queryDict.getlist('amount')
+        ticketQuantity = queryDict.getlist('quantity')
+        # print(list(dataDict))
+        event_form = EventForm(request.POST, request.FILES)
+        if event_form.is_valid():
+            event = event_form.save(commit=False)
+            user_profile = get_object_or_404(UserProfile, user=request.user)
+            event.creator =  user_profile
+            print('hi')
+            event.save()
+            ticket_form = TicketForm(request.POST)
+            if ticket_form.is_valid():
+                ticket_event = get_object_or_404(Event, pk=event.id)
+                for ticket in range(len(ticketType)):
+                    EventTicket.objects.create(
+                        type = ticketType[ticket],
+                        quantity = ticketQuantity[ticket],
+                        amount = ticketAmount[ticket],
+                        event = ticket_event
+                    )
+            return HttpResponse(reverse('afrivent:event-detail', args=(event.slug,)))
+            
+    else:
+        form = EventForm()
+    
+    return redirect('afrivent:event-detail', event.slug)

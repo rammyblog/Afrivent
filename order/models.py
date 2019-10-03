@@ -9,8 +9,8 @@ class Order(models.Model):
     created = models.DateField(auto_now_add=True)
     total_cost = models.DecimalField(max_digits=15, decimal_places=2)
     authorization_url = models.URLField(blank=True)
-    ref_code = models.CharField(max_length=250, default=False)
-    payment_confirmation = models.BooleanField(null=True)
+    ref_code = models.CharField(max_length=250)
+    payment_confirmation = models.BooleanField(default=False)
     access_code = models.CharField(max_length=1000, null=True)
     order_unique_id = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
 

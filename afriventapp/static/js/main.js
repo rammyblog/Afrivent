@@ -33,7 +33,8 @@ $(document).ready(function(){
 				orderTotal += Number(element.total_cost); 
 				
 				$('.modal-body').append(`
-				<p>Order id: ${element.id} Amount: ${formatter.format(element.total_cost)} Ordered on: ${element.created}  </p>
+				<p>Order id: ${element.id} Amount: ${formatter.format(element.total_cost)} 
+				Ordered on: ${element.created}  </p>
 				
 				`)
 				
@@ -132,6 +133,127 @@ function getCookie(name) {
     return cookieValue;
 }
 var csrftoken = getCookie('csrftoken');
+
+
+
+$('#addticket').on('click', function(e) {
+	let ticketData = {}
+	e.preventDefault();
+	$('#event-ticket-form').append(`
+    <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="ticketType">Ticket Type</label>
+          <input type="text" class="form-control ticketType" name="type" placeholder="Regular..." required>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="quantity">Quantity Available</label>
+            <input type="number" class="form-control quantityInput" name="quantity" required placeholder="50" id="quantity" required>
+          </div>
+        <div class="form-group col-md-2">
+          <label for="amount">Amount</label>
+          <input type="number" class="form-control amountInput" name="amount" required placeholder="50.00" id="amount" required>
+        </div>
+        <button type="button"  class=" close closeTicket"  aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+
+	`);
+	closeTicket()
+
+	let ticketTypeInput = $('.ticketType')
+	let quantityAvailableInput =  $('.quantityInput')
+	let ticketAmount = $('.amountInput')
+	for (let index = 0; index < ticketTypeInput.length; index++) {	
+		// console.log(ticketAmount[index].value.length);
+		
+		if(  (ticketTypeInput[index].value.trim().length >= 1) && (ticketAmount[index].value.length >= 1) && (quantityAvailableInput[index].value.length >= 1)
+		){
+			let ticketType = ticketTypeInput[index].value;
+			let ticketUnitAmount = ticketAmount[index].value;
+			let ticketUnitQuantity = quantityAvailableInput[index].value;
+
+			ticketData[index]= {
+				'ticketType': ticketType,
+				'ticketAmount': ticketUnitAmount,
+				'ticketQuantity': ticketUnitQuantity
+			}
+
+
+
+
+		}	
+		
+		console.log(ticketData);
+		
+
+		
+
+		
+	}
+
+	
+
+		
+
+		// for (let index = 0; index < ticketAmount.length; index++) {		
+		// 	console.log(ticketAmount[index].value)
+		// }
+
+		
+	
+
+	// $('.ticketType').forEach( element => {
+	// 	console.log(element);
+		
+	// });
+	
+	
+	
+
+	
+})
+
+function closeTicket(){
+	$('.closeTicket').on('click', function() {
+		$(this).parent().remove()
+	})
+}
+
+$("#createEvent").submit(function(e) {
+	var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+	e.preventDefault();
+	$form = $(this)
+	var formData = new FormData(this);
+	$.ajax({
+		url: "/new/event/created",
+		type: "POST",
+		data: formData,
+		beforeSend: function(xhr, settings) {
+			if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+				xhr.setRequestHeader("X-CSRFToken", csrftoken);
+			}
+		},
+		success: function(response){
+			console.log(window.location.host);
+			toastr.success("Event Created Successfully");
+			window.location.replace('http://'+window.location.host+response);
+	
+			
+		},
+		error: function(){
+			toastr.success("An Error Occured");
+			console.log("Error Occured");
+			
+		},
+		cache: false,
+		contentType: false,
+		processData: false
+		
+	})
+	
+})
+
 
 $("#orderForm").submit(function(e) {
 	var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
