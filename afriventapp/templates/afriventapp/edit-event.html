@@ -1,0 +1,87 @@
+{% extends 'afriventapp/layout.html' %}
+{% load static %}
+{% load event_extras %}
+{% block title%} {{user_profile.user.first_name | title }} Edit  {{event.event_name}} | AfriVent {% endblock %}
+    {% block body %}
+<section class="container">
+<form method="POST" id="editEvent" enctype="multipart/form-data">
+    {% csrf_token %} 
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="EventName">Event Name:</label>
+        <input type="text" class="form-control" name="event_name" id="EventName" value="{{event.event_name}}" placeholder="Enter the name/title of the Evemt" required>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="address">Location: </label>
+        <input type="text" class="form-control" name="address" id="address" 
+        placeholder="Enter the address where the Event
+         will be held" value="{{event.address}}" required>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <p>Current Image: <img src="http://127.0.0.1:8000/media/{{ MEDIA_URL}}{{event.event_image}}" alt="{{event.event_name}}" width="200" height="200" class="img-thumbnail"></p>
+
+      <label for="eventImage">Event Image: </label>
+            <input type="file" class="form-control-file" name="event_image" id="eventImage" value="{{event.event_image}}">
+    </div>
+    
+      <div class="form-group">
+        <label for="description">Event Description</label>
+        <textarea class="form-control" id="description" name="description" value="{{event.description}}" placeholder="Enter the event Description " required>description</textarea>
+      </div>
+      <div class="form-row">
+      <div class="form-group col-md-3">
+        <label for="startDateTime">Event Start Date</label>
+        <input type="date" class="form-control" name="start_date" id="startDateTime" value="{{event.start_date|date:"Y-m-d"}}" required>
+      </div>
+      <div class="form-group col-md-3">
+          <label for="startDateTime">Event Start Time</label>
+          <input type="time" class="form-control" name="start_time" value="{{event.start_time|date:'G:i:s'}}" id="startDateTime" required>
+        </div>
+
+      <div class="form-group col-md-3">
+        <label for="endDateTime">Event End date</label>
+        <input type="date" class="form-control" name="end_date" id="endDateTime" value='{{ event.end_date|date:"Y-m-d" }}'required> 
+      </div>
+
+      <div class="form-group col-md-3">
+          <label for="startDateTime">Event End Time</label>
+          <input type="time" class="form-control" name="end_time" id="startDateTime" value="{{event.end_time|date:'G:i:s'}}" required>
+        </div>
+
+    </div>
+    <hr>
+
+    <div class="text-center">
+      {% for ticket in ticket %}
+      <div id="event-ticket-form"> 
+          <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="ticketType">Ticket Type</label>
+                <input type="text" class="form-control ticketType" name="type" value="{{ticket.type}}" required>
+              </div>
+              <div class="form-group col-md-3">
+                  <label for="quantity">Quantity Available</label>
+                  <input type="number" class="form-control quantityInput" value="{{ticket.quantity}}" name="quantity" required id="quantity" required>
+                </div>
+              <div class="form-group col-md-2">
+                <label for="amount">Amount</label>
+                <input type="number" class="form-control amountInput" name="amount" value="{{ticket.amount}}" id="amount" required>
+              </div>
+              <button type="button"  class=" close closeTicket"  aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+  
+      
+          </div>
+      {% endfor %}
+      <button id="addticket" class="btn btn-danger">Add more Ticket</button>
+
+    <button type="submit" class="btn btn-primary">Edit Event</button>
+    </div>
+  </form>
+</section>
+
+  {% endblock %}

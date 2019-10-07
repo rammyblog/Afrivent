@@ -242,7 +242,7 @@ $("#createEvent").submit(function(e) {
 			
 		},
 		error: function(){
-			toastr.success("An Error Occured");
+			toastr.error("An Error Occured");
 			console.log("Error Occured");
 			
 		},

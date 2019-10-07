@@ -24,7 +24,7 @@
                     <p><a class="" href="{% url 'afrivent:home' %}">AFRIVERNT!!</a></p>
                       <ul class="links">
                         <li><a href="#">Events</a></li>
-                        <li><a href="#">Create Event</a></li>
+                        <li><a href="{% url 'afrivent:create-event' %}">Create Event</a></li>
                         {% if not user.is_authenticated %}
                         <li><a href="{% url 'account:login' %}">Sign in</a></li>
                         {% else %}
@@ -69,7 +69,7 @@
         <section>
                 <ul class="bottom_links">
                     <li><a href="#">Events</a></li>
-                    <li><a href="#">Create Event</a></li>
+                    <li><a href="{% url 'afrivent:create-event' %}">Create Event</a></li>
                     <li><a href="#">Sign in</a></li>
                 </ul>
         </section>

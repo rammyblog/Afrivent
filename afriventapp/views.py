@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, HttpResponseRedirect, reverse
+from django.shortcuts import render, get_object_or_404, HttpResponseRedirect, reverse, redirect
 from .models import Event, EventTicket, UserProfile
 from django.views.generic import ListView, DetailView
 from django.db.models import Max, Min
@@ -7,6 +7,9 @@ import json
 from django.http import JsonResponse
 from django.http import HttpResponse
 from afriventapp.forms import EventForm, TicketForm
+from django.views.generic.edit import UpdateView
+# from afriventapp.models import Event
+
 
 def home(request):
     events = Event.objects.all()
@@ -20,7 +23,9 @@ def home(request):
 #     context_object_name = 'event'
 
 
-#     def get_context_data(self, **kwargs):
+#     def get_context_data(self, **kwargs):    from django.views.generic.edit import UpdateView
+
+
 #         # Call the base implementation first to get a context
 #         context = super().get_context_data(**kwargs)
 #         # Add in a QuerySet of all the books
@@ -106,3 +111,25 @@ def eventCreated(request):
         form = EventForm()
     
     return redirect('afrivent:event-detail', event.slug)
+
+
+
+class EventUpdate(UpdateView):
+    model = Event
+    fields = '__all__'
+    template_name = 'afriventapp/edit-event.html'
+
+    def get_context_data(self, **kwargs):
+        """Insert the single object into the context dict."""
+        context = {}
+        if self.object:
+            context['ticket'] = EventTicket.objects.filter(event=self.object) 
+            context_object_name = 'EventTicket'
+            print(context_object_name)
+        #     if context_object_name:
+        #         context[context_object_name] = self.object
+        # context.update(kwargs)
+        return super().get_context_data(**context)
+
+
+# def eventUpdate(request, slug):
