@@ -132,4 +132,36 @@ class EventUpdate(UpdateView):
         return super().get_context_data(**context)
 
 
-# def eventUpdate(request, slug):
+def eventUpdate(request, event_slug):
+    event_edit =  get_object_or_404(Event, slug=event_slug)
+    ticket = EventTicket.objects.filter(event=event_edit)
+    print(ticket)
+    if request.method == 'POST':
+        queryDict = request.POST
+        ticketType = queryDict.getlist('type')
+        ticketAmount = queryDict.getlist('amount')
+        ticketQuantity = queryDict.getlist('quantity')
+        event_form = EventForm(request.POST, request.FILES, instance = event_edit)
+        if event_form.is_valid():
+            event_form.save()
+            ticketform = TicketForm(request.POST) 
+            for ticket in range(len(ticketType)):
+                    EventTicket.objects.create(
+                        type = ticketType[ticket],
+                        quantity = ticketQuantity[ticket],
+                        amount = ticketAmount[ticket],
+                        event = event_edit
+                    )
+            return redirect(reverse('afrivent:event-detail', args=(event_slug,)))
+            
+    else:
+        event_form = EventForm()
+        ticketform = TicketForm()
+
+    context = {
+
+        'event': event_edit,
+        'ticket': ticket
+    }
+    return render(request, 'afriventapp/edit-event.html', context)
+

@@ -216,9 +216,11 @@ $('#addticket').on('click', function(e) {
 
 function closeTicket(){
 	$('.closeTicket').on('click', function() {
-		$(this).parent().remove()
+		$(this).parent().remove();
 	})
 }
+
+closeTicket()
 
 $("#createEvent").submit(function(e) {
 	var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();

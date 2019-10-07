@@ -23,6 +23,7 @@
             <div class="card">
                     <div class="card-header event-date">
                            <p>Date: 17th <span>Sept</span> 2018</p>
+                           <a href="{% url 'afrivent:edit-event' event.slug %}">Edit Event</a>
                     </div>
                     <div class="card-body">
                       <h5 class="card-title">{{event.name}} </h5>
