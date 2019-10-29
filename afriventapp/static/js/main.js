@@ -64,11 +64,13 @@ $(document).ready(function(){
 	
 	var total = 0;
 	let ticketDetails = {};
-	let ticketPrice = {}
+	let ticketPrice = {};
+	let ticketName = {}
 	let eventID;
 	let finalPrice;
 	$('.quantity-calc').change(function(e) {	
 		var type =  $(this).children('option:selected').data('type');
+		var ticket_name =  $(this).children('option:selected').data('ticket_name');
 		var quantity =  $(this).children("option:selected").data('quantity');
 		let price = +$(this).children("option:selected").val()
 		eventID = $(this).children("option:selected").data('event');
@@ -80,9 +82,7 @@ $(document).ready(function(){
 			total += data[index];
 			$('.total_amount').html(`₦ ${total}`);
 			finalPrice = total
-			
-
-		}
+			}
 
 		data  = [];
 		total = 0;
@@ -90,19 +90,20 @@ $(document).ready(function(){
 		if (quantity != 0) {
 			ticketDetails[type] = quantity;
 			ticketPrice[type] = price;
-			
-			console.log(ticketDetails);			
+			ticketName[type] = ticket_name 
+			// console.log(ticketDetails);			
 		}else{
 			delete ticketDetails[type];
 			delete ticketPrice[type]
+			delete ticketName[type]
+
 		}
 		$('.ticketType').html('');
 
 		for(let[ticket, value] of Object.entries(ticketDetails)){
-
+			console.log(ticket, ticketDetails)
 			let individualPrice = ticketPrice[ticket] * value;
-
-			$('.ticketType').append(`${value}x ${ticket} - ₦${individualPrice} </br>`);
+			$('.ticketType').append(`${value}x ${ticketName[ticket]} - ₦${individualPrice} </br>`);
 
 		}
 
@@ -259,7 +260,13 @@ $("#createEvent").submit(function(e) {
 
 $("#orderForm").submit(function(e) {
 	var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
-	e.preventDefault();
+	e.preventDefault()
+	
+	// $('#ticket-modal').modal('hide');
+
+	$('.modal-grid').html('');
+
+
 	$.ajax({
 	  url: "/order/process",
 	  type: "POST",
@@ -276,14 +283,25 @@ $("#orderForm").submit(function(e) {
 		},
 	  success: function(response) {
 		console.log(window.location.host);
+		console.log(response);
 		toastr.success("Saved Successfully");
-		window.location.replace('http://127.0.0.1:8000/order/payment/process');
+		// $.redirect("http://127.0.0.1:8000/order/process/confirm", {"X-CSRFToken": csrf_token}, "POST" ); 
+		window.location.replace('http://127.0.0.1:8000/order/process/confirm');
+
+		// $("#orderFrom").submit();
 
 	 },
 	  error: function() {
+		  console.log(data);
+		  
 		toastr.error("An Error Occured");
-	  }
+	  },
+	//   cache: false,
+	//   contentType: false,
+	//   processData: false,
 	});
+
+
   });
 
 });
@@ -297,5 +315,46 @@ $("#orderForm").submit(function(e) {
 //         }
 //     }
 // });
+
+
+
+
+function startTimer(duration, display) {
+	var start = Date.now(),
+		diff,
+        minutes,
+        seconds;
+    function timer() {
+        // get the number of seconds that have elapsed since 
+ 
+
+       // startTimer() was called
+        diff = duration - (((Date.now() - start) / 1000) | 0);
+
+        // does the same job as parseInt truncates the float
+        minutes = (diff / 60) | 0;
+        seconds = (diff % 60) | 0;
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        display.textContent = minutes + ":" + seconds; 
+
+        if (diff <= 0) {
+            // add one second so that the count down starts at the full duration
+            // example 05:00 not 04:59
+            start = Date.now() + 1000;
+        }
+    };
+    // we don't want to wait a full second before the timer starts
+    timer();
+    setInterval(timer, 1000);
+}
+
+window.onload = function () {
+    var tenMinutes = 60 * 10,
+        display = document.querySelector('#time');
+    startTimer(tenMinutes, display);
+};
 
 

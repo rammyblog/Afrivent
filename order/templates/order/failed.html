@@ -14,11 +14,10 @@
     <div class="container">
       <div class="successTicket">
         <div class="jumbotron">
-          <h1 class="text-center">Payment Successful!</h1>
-          <p class="lead text-center"><strong>Please check your email</strong> for further the ticket details on how to get to the event with ease.</p>
+          <h1 class="text-center">Payment Failed!</h1>
+          <p class="lead text-center"><strong>For some reasons your payment didn't go through and your order failed</strong> Click the button below to retry</p>
           <hr>
-          {% include 'order/ticket.html' %}
-
+          <button class="btn btn-dark"> <a href="{{order.authorization_url}}">Retry Payment for Order #{{order.id}}</a></button>
         </div>
       </div>
     </div>

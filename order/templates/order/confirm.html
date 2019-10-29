@@ -1,0 +1,11 @@
+{% extends 'afriventapp/layout.html' %}
+{% load static %}
+{% load event_extras %}
+{% block title%} {{user_profile.user.first_name | title }} Create Event | Afrivent {% endblock %}
+    {% block body %}
+
+<a href="{% url 'order:process' %}">Confirm</a>
+
+<div>Confirm the order in the next <span id="time"></span> minutes! else it will be cancelled automatically </div>
+
+{% endblock %}

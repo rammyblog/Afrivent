@@ -6,7 +6,7 @@ from django.db.models.signals import pre_save, post_save, post_delete
 from .utils import unique_slug_generator
 from django.urls import reverse
 from phonenumber_field.modelfields import PhoneNumberField
-
+from django.contrib.auth.models import AbstractUser
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -17,6 +17,8 @@ class UserProfile(models.Model):
     account_number = models.IntegerField()
     account_name = models.CharField(max_length=550)
     balance = models.DecimalField(max_digits=1000, decimal_places=2, default=0.00)
+    verified_email = models.BooleanField(default= False)
+
     
 
     class Meta:
@@ -28,6 +30,9 @@ class UserProfile(models.Model):
 
     def get_absolute_url(self):
         return reverse("afrivent:user-dashboard", kwargs={"pk": self.pk})
+
+
+
 
 
 

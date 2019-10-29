@@ -16,9 +16,16 @@ a{
 }
 
 
+html{
+    height: 100%;
+    margin: 0;
+}
+
 body{
     font-family: 'Gayathri', sans-serif;
     font-weight: 400;
+    height: 100%;
+    margin: 0;
 }
 
 .top{
@@ -266,7 +273,7 @@ body{
 
 
 /* Footer */
-footer{
+.footer-items{
         display: grid;
         grid-gap: 10px;
         list-style-type: none;

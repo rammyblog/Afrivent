@@ -134,8 +134,7 @@ class EventUpdate(UpdateView):
 
 def eventUpdate(request, event_slug):
     event_edit =  get_object_or_404(Event, slug=event_slug)
-    ticket = EventTicket.objects.filter(event=event_edit)
-    print(ticket)
+    ticketquery = EventTicket.objects.filter(event=event_edit)
     if request.method == 'POST':
         queryDict = request.POST
         ticketType = queryDict.getlist('type')
@@ -145,13 +144,15 @@ def eventUpdate(request, event_slug):
         if event_form.is_valid():
             event_form.save()
             ticketform = TicketForm(request.POST) 
+            ticketquery.delete()
             for ticket in range(len(ticketType)):
-                    EventTicket.objects.create(
+                EventTicket.objects.create(
                         type = ticketType[ticket],
                         quantity = ticketQuantity[ticket],
                         amount = ticketAmount[ticket],
                         event = event_edit
                     )
+
             return redirect(reverse('afrivent:event-detail', args=(event_slug,)))
             
     else:
@@ -161,7 +162,7 @@ def eventUpdate(request, event_slug):
     context = {
 
         'event': event_edit,
-        'ticket': ticket
+        'ticket': ticketquery
     }
     return render(request, 'afriventapp/edit-event.html', context)
 

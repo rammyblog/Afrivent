@@ -1,0 +1,77 @@
+{% load static %}
+{% load humanize %}
+
+
+<div class="container custom-container">
+    <div class="ticketBackground" id="ticket">
+        <div class="col-md-3 barcodeContainer">
+            <img class="img-fluid center--image" src="{{order.order_barcode.url}}" alt="" srcset="">
+        </div>
+
+
+        <div class="col-md-9 ticket__text__info">
+            
+            <div class="ticket__single__info">
+                <p class="text-muted ticket-constant">Name</p>
+                <p class="ticket-info ticket__owner">{{order.user.get_full_name}}</p>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 col-sm-4 col-xs-4">
+                <p class="text-muted ticket-constant">Ticket Id</p>
+                <p class="ticket-info ">{{order.id}}</p>
+                </div>
+                <div class="col-md-4 col-sm-4 col-xs-4">
+                    <p class="text-muted ticket-constant">Event</p>
+                    <p class="ticket-info">{{order.event}}</p>
+                </div>
+                <div class="col-md-4 col-sm-4 col-xs-4">
+                    <p class="text-muted ticket-constant">Organizer</p>
+                    <p class="ticket-info">{{order.event.creator | title}}</p>
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-4 col-sm-4 col-xs-4">
+                <div class="ticket__single__info">
+                    <p class="text-muted ticket-constant ">Date</p>
+                    <p class="ticket-info">{{order.event.start_date}}</p>
+                </div>
+                </div>
+
+                <div class="col-md-4 col-sm-4 col-xs-4">
+                    <div class="ticket__single__info">
+                        <p class="text-muted ticket-constant ">Ticket Type</p>
+                        {% for order in order_items%}
+                        <p class="ticket-info ticket-type">{{order.ticket}} - x{{order.quantity}}</p>
+                        {% endfor %}
+
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-sm-4 col-xs-4">
+                    <div class="ticket__single__info">
+                        <p class="text-muted ticket-constant ">Total Cost</p>
+                        <p class="ticket-info">₦ {{order.total_cost |intcomma}}</p>
+
+
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="ticket__single__info">
+                <p class="text-muted ticket-constant">Location</p>
+                <p class="ticket-info">{{order.event.address}}</p>
+            </div>
+        </div>
+
+    </div>
+        <!-- <button class="btn btn-primary printTicket" id="printTicketBtn">Print Ticket</button> -->
+
+    </div>
+
+

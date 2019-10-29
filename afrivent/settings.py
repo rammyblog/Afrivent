@@ -1,3 +1,4 @@
+
 """
 Django settings for afrivent project.
 
@@ -11,6 +12,13 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+
+
+# ^^^ The above is required if you want to import from the celery
+# library.  If you don't have this then `from celery.schedules import`
+# becomes `proj.celery.schedules` in Python 2.x since it allows
+# for relative imports by default.
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -27,7 +35,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+TIME_ZONE = 'UTC'
 # Application definition
 
 INSTALLED_APPS = [
@@ -42,7 +50,11 @@ INSTALLED_APPS = [
     'order',
     'widget_tweaks',
     'phonenumber_field',
+    'django_celery_beat',
+    'django_celery_results',
+    'django.contrib.humanize'
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -130,7 +142,20 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
 
-from python_paystack.paystack_config import PaystackConfig
+# PaystackConfig.SECRET_KEY  = 'sk_test_4bc9c2030fe11485c51ce1692428ce37663c9d6c'
+# PaystackConfig.PUBLIC_KEY = 'pk_test_66242613f73c8034560a3eecf9d248787f776bdb'
 
-PaystackConfig.SECRET_KEY  = 'sk_test_4bc9c2030fe11485c51ce1692428ce37663c9d6c'
-PaystackConfig.PUBLIC_KEY = 'pk_test_66242613f73c8034560a3eecf9d248787f776bdb'
+# Celery application definition
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'onasanyatunde67@gmail.com'
+EMAIL_HOST_PASSWORD = 'ignatius3151'
+EMAIL_PORT = 587
+
+# AUTH_USER_MODEL = "afriventapp.UserFlag" 

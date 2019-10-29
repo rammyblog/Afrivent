@@ -26,12 +26,12 @@
                            <a href="{% url 'afrivent:edit-event' event.slug %}">Edit Event</a>
                     </div>
                     <div class="card-body">
-                      <h5 class="card-title">{{event.name}} </h5>
+                      <h5 class="card-title">{{event.event_name}} </h5>
                       <p class="card-text">{{event.creator | title}}</p>
                       <p class="card-text">Price <small class="">₦ {{ticket_price_range.min_price |floatformat}} -  ₦ {{ticket_price_range.max_price |floatformat}}</small></p>
 
                       <!-- Button trigger modal -->
-                      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+                      <button type="button" class="btn btn-primary" id="ticket-modal" data-toggle="modal" data-target="#exampleModalCenter">
                         Register
                       </button>
 
@@ -78,6 +78,7 @@
                                   <option  data-type='{{ticket.id}}' data-quantity="{{forloop.counter0}}"
                                    data-price="{{ticket.amount}}"
                                    data-event="{{event.id}}"
+                                   data-ticket_name="{{ticket.type}}"
                                    value="{{ticket.amount}}">{{forloop.counter0}}</option>
                                   <!-- <input type="hidden" value="{{ticket.amount}}" -->
                                   {% endfor %}

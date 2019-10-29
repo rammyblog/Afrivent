@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from afriventapp.models import EventTicket, Event
+from afriventapp.models import EventTicket, Event, UserProfile
 import uuid
 
 class Order(models.Model):
@@ -13,6 +13,7 @@ class Order(models.Model):
     payment_confirmation = models.BooleanField(default=False)
     access_code = models.CharField(max_length=1000, null=True)
     order_unique_id = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
+    order_barcode = models.FileField(upload_to='barcode', null=True)
 
     def __str__(self):
         return str(self.event)

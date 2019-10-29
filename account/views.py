@@ -1,32 +1,69 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from account.forms import Register, UserProfileForm
 from afriventapp.models import UserProfile
-
+from django.contrib.sites.shortcuts import get_current_site
+from django.http import HttpResponse
 from django.contrib.auth import authenticate, login,  logout
-
+from .tokens import account_activation_token
 from django.contrib import messages
+from django.core.mail import EmailMessage
+from django.contrib.auth.models import User
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.template.loader import render_to_string
 
 
 def user_register(request):
     if request.method == 'POST':
         form = Register(request.POST)
         if form.is_valid():
-            user=form.save()
+            user=form.save(commit=False)
+            # Get all info from form
             username = form.cleaned_data['username']
             password = form.cleaned_data['password1']
             user.email =  form.cleaned_data['email']
+            to_email = form.cleaned_data['email']
             user.first_name = form.cleaned_data['first_name']
             user.last_name=  form.cleaned_data['last_name']
             address = form.cleaned_data['address']
             phone_number = form.cleaned_data['phone_number']
+            user_bio = form.cleaned_data['bio']
+            acct_number = form.cleaned_data ['account_number']
+            acct_name = form.cleaned_data ['account_name']
+            bank_name = form.cleaned_data ['bank_name']
+    
+            user.is_active = False
             user.save()
-            auth_login(request, username, password)
+
+            UserProfile.objects.create(
+                user = user,
+                address = address,
+                phone_number =  phone_number,
+                bio = user_bio,
+                bank_name = bank_name,
+                account_number = acct_number,
+                account_name = acct_name
+            )
+
+
+            # Sending mail 
+            current_site = get_current_site(request)
+            mail_subject = "Activate Your Afrivent Account!"
+            message = render_to_string(
+                'account/activate_email.html', {
+                    'user': user,
+                    'domain' : current_site.domain,
+                    'uid' : urlsafe_base64_encode(force_bytes(user.pk)),
+                    'token' : account_activation_token.make_token(user)
+                })
+            email = EmailMessage(mail_subject, message, to=[to_email])
+            email.send()
+            print('Send')
+            return HttpResponse('Please confirm your email address to complete the registration')
+            # auth_login(request, username, password)
             # print(request.u)
-            profile = UserProfile.objects.get(user=request.user)
-            profile.address = address
-            profile.phone_number = phone_number
-            profile.save()
-            return redirect('afrivent:home')
+
+            # return redirect('afrivent:home')
 
 
     else:
@@ -36,12 +73,34 @@ def user_register(request):
 
     return render(request, 'account/register.html', context)
 
+def activate_account(request, uidb64, token):
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user = user.save()
+        profile = UserProfile.objects.get(user=user)
+        profile.verified_email = True
+        profile.save()
+        login(request, user)
+        # return redirect('home')
+        return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
+    else:
+        return HttpResponse('Activation link is invalid!')
+
 
 def user_login(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
-        auth_login(request, username, password)
+        try:
+            auth_login(request, username, password)
+        except AttributeError:
+            return HttpResponse('USER HAS BEEN DEACTIVATED')
+            
         return redirect('afrivent:home')
 
 
@@ -52,13 +111,14 @@ def user_login(request):
 def user_logout(request):
     messages.add_message(request, messages.INFO, 'Logged Out Successfully')
     print(messages)
-    logout(request)
+    logout(request) 
     return redirect('afrivent:home')
 
 
 def auth_login(request, username, password):
         user = authenticate(request, username=username, password=password)
-        login(request, user)
+        login(request, user)   
+
 
 
 # def user_register(request):
