@@ -72,16 +72,16 @@ $(document).ready(function(){
 		var type =  $(this).children('option:selected').data('type');
 		var ticket_name =  $(this).children('option:selected').data('ticket_name');
 		var quantity =  $(this).children("option:selected").data('quantity');
-		let price = +$(this).children("option:selected").val()
+		var price = +$(this).children("option:selected").data('price')
 		eventID = $(this).children("option:selected").data('event');
 		let data = $('.quantity-calc').map(function() {				
-			return +($(this).children("option:selected").text()) * +($(this).children("option:selected").val())
+			return +($(this).children("option:selected").text()) * +($(this).children("option:selected").data('price'))
 		}).get();
 
 		for (let index = 0; index < data.length; index++) {	
 			total += data[index];
 			$('.total_amount').html(`₦ ${total}`);
-			finalPrice = total
+			finalPrice = total;
 			}
 
 		data  = [];
@@ -90,25 +90,28 @@ $(document).ready(function(){
 		if (quantity != 0) {
 			ticketDetails[type] = quantity;
 			ticketPrice[type] = price;
-			ticketName[type] = ticket_name 
+			ticketName[type] = ticket_name; 
 			// console.log(ticketDetails);			
 		}else{
 			delete ticketDetails[type];
 			delete ticketPrice[type]
 			delete ticketName[type]
-
 		}
+
+
 		$('.ticketType').html('');
+		$('.ticketTypeAmount').html('');
+
 
 		for(let[ticket, value] of Object.entries(ticketDetails)){
-			console.log(ticket, ticketDetails)
+			console.log(ticket, ticketDetails, ticketPrice)
 			let individualPrice = ticketPrice[ticket] * value;
-			$('.ticketType').append(`${value}x ${ticketName[ticket]} - ₦${individualPrice} </br>`);
+			$('.ticketType').append(`${ticketName[ticket]} x ${value} </br>`);
+			$('.ticketTypeAmount').append(`₦${individualPrice} </br>`);
+
 
 		}
 
-
- 
 });
 
 
@@ -184,6 +187,7 @@ $('#addticket').on('click', function(e) {
 
 
 		}	
+
 		
 		console.log(ticketData);
 		
@@ -192,26 +196,6 @@ $('#addticket').on('click', function(e) {
 
 		
 	}
-
-	
-
-		
-
-		// for (let index = 0; index < ticketAmount.length; index++) {		
-		// 	console.log(ticketAmount[index].value)
-		// }
-
-		
-	
-
-	// $('.ticketType').forEach( element => {
-	// 	console.log(element);
-		
-	// });
-	
-	
-	
-
 	
 })
 
@@ -223,8 +207,65 @@ function closeTicket(){
 
 closeTicket()
 
+
+// 
+
+function getDate() {
+	var today = new Date();
+	var dd = String(today.getDate()).padStart(2, '0');
+	var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+	var yyyy = today.getFullYear();
+	today = yyyy + '-' + mm + '-' + dd;
+	console.log(today);
+	
+	return today;
+}	
+
 $("#createEvent").submit(function(e) {
+
+
 	var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+
+	// CREATE EVENT FORM VALIDATION
+
+	let eventStartDate = $('#startDate').val();
+	let eventEndDate = $('#endDate').val();
+	let eventStartTime = $('#startTime').val();
+	let eventEndTime = $('#endTime').val();
+	let eventTicketSaleEnd = $('#ticketSalesEndDate').val();
+
+	console.log(eventStartDate,eventStartTime)
+
+
+	let eventStartDateTime =  new Date(eventStartDate+'T'+eventStartTime);
+	let eventEndDateTime =  new Date(eventEndDate+'T'+eventEndTime);
+	let eventTicketSaleEndDateTime = new Date(eventTicketSaleEnd+'T00:00:00Z');
+
+	let todayDate = new Date(getDate()+'T00:00:00Z');
+	console.log(todayDate);
+	
+
+
+	if (eventStartDateTime < todayDate) {
+		toastr.error('The Event Start Date is in the past ')
+		return false;
+	}
+
+	if (eventEndDateTime < eventStartDateTime  ){
+		toastr.error('The Event start Date is higher than the Event End Date ')
+		return false;
+
+	}
+
+	if (eventTicketSaleEndDateTime > eventEndDateTime || eventTicketSaleEndDateTime < eventStartDateTime  ){
+		toastr.error('The End Of Ticket Sale Date is lower than the Event Start Date or higher than the Event End Date ')
+		return false;
+
+	}
+
+
+
+	// new Date(year, month, day, hours, minutes, seconds, milliseconds)
 	e.preventDefault();
 	$form = $(this)
 	var formData = new FormData(this);
@@ -260,12 +301,28 @@ $("#createEvent").submit(function(e) {
 
 $("#orderForm").submit(function(e) {
 	var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+
+	ticketQuantityArray = Object.values(ticketDetails)
+	let totalQuantityOrder = 0
+
+	ticketQuantityArray.forEach(quantity => {
+			totalQuantityOrder += quantity
+	})
+
+	if (totalQuantityOrder <= 0) {
+		toastr.error('No ticket selected')
+		return false;
+	}
+
+	
 	e.preventDefault()
 	
 	// $('#ticket-modal').modal('hide');
-
+	
+	var quantity =  $(this).children("option:selected").data('quantity');
+	console.log(quantity);
+	
 	$('.modal-grid').html('');
-
 
 	$.ajax({
 	  url: "/order/process",
@@ -273,7 +330,8 @@ $("#orderForm").submit(function(e) {
 	  beforeSend: function(xhr, settings) {
 		        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
 		            xhr.setRequestHeader("X-CSRFToken", csrftoken);
-		        }
+				}
+				
 		    },
 	  data: {
 		 ticket :JSON.stringify(ticketDetails),
@@ -308,13 +366,6 @@ $("#orderForm").submit(function(e) {
 
 
 
-// $.ajaxSetup({
-//     beforeSend: function(xhr, settings) {
-//         if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-//             xhr.setRequestHeader("X-CSRFToken", csrftoken);
-//         }
-//     }
-// });
 
 
 
@@ -356,5 +407,8 @@ window.onload = function () {
         display = document.querySelector('#time');
     startTimer(tenMinutes, display);
 };
+
+
+
 
 

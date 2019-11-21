@@ -1,0 +1,71 @@
+{% extends 'afriventapp/layout.html' %}
+{% load static %}
+    {% block body %}
+
+<main>
+    <section class="upcoming-events">
+        <div class="jumbotron">
+            <div class="container mt-4">
+                <div class="center-event-grid">
+                    <div class="upcoming-event-text">
+                            <h2 class="display-4 text-center">All Events</h2>
+                            <p class="lead text-center"> This is the list of all available events 
+                    </div>
+                
+                <div class="row">
+                    {% for event in events %}
+                    <div class="col-auto mb-3">
+                        <div class="card" style="width: 18rem;">
+                            <a href="" class="event-date-a">{{event.start_date}}</a>
+
+                            <img src="{{event.event_image.url}}" class="card-img-top img-fluid" alt="{{event.event_name}}">
+                            <div class="card-body">
+                                <a href="{{event.get_absolute_url}}" class="card-title event-name">{{event.event_name}}</a>
+                                <p class="event-location">{{event.address}}</p>
+                            </div>
+                        </div>
+                    </div>
+            
+                    {% endfor %}
+                </div>
+            </div>
+
+            </div>
+            <nav aria-label="paginator">
+                    <ul class="pagination justify-content-center">
+                        {% if events.has_previous %}
+                            <li class="page-item">
+                            <a class="page-link" href="?page={{ events.previous_page_number }}" tabindex="-1">Previous</a>
+                          </li>
+                      {% endif %}
+                      
+                      <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
+                    
+                      {% if events.number != 1 %}
+                      <li class="page-item active" aria-current="page">
+                        <a class="page-link" href="#">{{events.number}} <span class="sr-only">(current)</span></a>
+                      </li>
+                      {% endif %}
+
+                      {% if events.has_next %}                      
+                      <li class="page-item"><a class="page-link" href="?page={{ events.next_page_number }}"> {{events.next_page_number}}</a></li>
+                      
+                      <li class="page-item">
+                        <a class="page-link" href="?page={{ events.next_page_number }}">Next</a>
+                      </li>
+
+                      <li class="page-item">
+                            <a class="page-link" href="?page={{ events.paginator.num_pages }}">last</a>
+                    </li>
+                      {% endif %}
+                    </ul>
+                  </nav>
+                
+                </div>
+            </section>
+                
+
+</main>
+
+
+    {% endblock %}

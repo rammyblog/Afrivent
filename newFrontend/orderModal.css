@@ -1,0 +1,36 @@
+ul {
+	list-style: outside none none;
+	margin: 0;
+	padding: 0;
+}
+.order-details ul li p {
+	color: #606060;
+	display: block;
+	margin: 0;
+	width: 50%;
+	float: left;
+}
+
+.order-details ul li p.strong {
+	color: #303030;
+	font-weight: 600;
+	text-transform: uppercase;
+}
+
+.order-details {
+	background-color: #f1f2f3;
+	padding: 10px 0;
+	text-align: left;
+	float: left;
+    width: 100%
+}
+
+body {
+	line-height: 24px;
+	font-size: 14px;
+	font-style: normal;
+	font-weight: normal;
+	visibility: visible;
+	font-family: "Open Sans", sans-serif;
+	color: #717171;
+}

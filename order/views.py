@@ -35,12 +35,12 @@ def orderConfimation(request):
     event = get_object_or_404(Event, id= order.event.id)
 
     if request.session['order_exist']:
-        result = reconcileOrder.apply_async((order_id,), countdown=120)
+        result = reconcileOrder.apply_async((order_id,), countdown=600)
         request.session['task_id'] = result.id
         OrderItems = OrderItem.objects.filter(order=order)
         request.session['order_exist'] = False
     else:
-        return render(request, 'order/failed.html', context={
+        return render(request, 'order/failedOrder.html', context={
             'order':order
         })
 
@@ -62,7 +62,6 @@ def orderConfimation(request):
 
 @login_required
 def orderProcess(request):
-
     if request.method == 'POST':
         queryDict = request.POST
         print(queryDict)
@@ -130,9 +129,10 @@ def processPayment(request):
     #         'order': order
     #     } )
     # else:
-    PaystackConfig.SECRET_KEY  = 'sk_test_4bc9c2030fe11485c51ce1692428ce37663c9d6c'
-    PaystackConfig.PUBLIC_KEY = 'pk_test_66242613f73c8034560a3eecf9d248787f776bdb'
-    transaction = Transaction(100000, 'onasanyatunde67@gmail.com')
+    PaystackConfig.SECRET_KEY  = 'sk_test_4bc9c2030fe11485c51ce1692428ce37663c9d6c';
+    PaystackConfig.PUBLIC_KEY = 'pk_test_66242613f73c8034560a3eecf9d248787f776bdb';
+    orderAmountKobo = order.total_cost *  100
+    transaction = Transaction(orderAmountKobo, order.user.email)
     transaction_manager = TransactionsManager() 
     transaction = transaction_manager.initialize_transaction('STANDARD', transaction)
     # request.session['transaction'] = transaction  
@@ -176,7 +176,7 @@ def confirmPayment(request):
         # request.session['task_id'] = result.id
         #Send Email
         order.save()
-        return render(request, 'order/failed.html', context={
+        return render(request, 'order/failedPayment.html', context={
             'order':order
         })
  

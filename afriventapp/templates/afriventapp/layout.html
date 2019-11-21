@@ -11,50 +11,62 @@
      {% block stylesheet %} {% endblock %}
      <script src="https://kit.fontawesome.com/833e0cadb7.js"></script>     
      <link href="https://fonts.googleapis.com/css?family=Gayathri|Muli&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet"> 
+
      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.css" integrity="sha256-He3QEBKoL/nMXlVsoM7S2C2kjFQqS5L+mgA+F8LpG+U=" crossorigin="anonymous" />
 
 </head>
 <body>
 
     <header>    
+            <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+                    <a class="navbar-brand" href="{% url 'afrivent:home' %}">AFRIVENT</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                      <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                      <ul class="navbar-nav">
+                        <li class="nav-item active">
+                          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" href="#">Events</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" href="{% url 'afrivent:create-event' %}">Create Event</a>
+                        </li>
+                     
+                      </ul>
+                                           
+                    </div>
+                    <form class="form-inline my-2 my-lg-0" method="GET" action="{% url 'afrivent:search'%}">
+                            <input class="form-control mr-sm-2" type="search" placeholder="Search" name="q" aria-label="Search">
+                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                    </form>    
+                    <ul class="navbar-nav">                     
 
-            <div class="top">
-                <div class="navbar">
-                        <!-- <a onclick="M.toast({html: 'I am a toast'})" class="btn">Toast!</a> -->
-                    <p><a class="" href="{% url 'afrivent:home' %}">AFRIVERNT!!</a></p>
-                      <ul class="links">
-                        <li><a href="#">Events</a></li>
-                        <li><a href="{% url 'afrivent:create-event' %}">Create Event</a></li>
-                        {% if not user.is_authenticated %}
-                        <li><a href="{% url 'account:login' %}">Sign in</a></li>
+                    {% if not user.is_authenticated %}   
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'account:login' %}">Sign in</a>
+                        </li>
                         {% else %}
-                        <div class="dropdown">
-                                <a href="{{user.get_absolute_url}}" class="dropdown-toggle" style="color:aliceblue" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  {{user.username}}
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                  <a class="dropdown-item" href="{% url 'afrivent:user-profile' user.id%}">Your Events</a>
-                                  <a class="dropdown-item" href="{% url 'account:logout' %}">Logout</a>
-                                </div>
+                        <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Howdy!  {{user.username | title }}
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="{% url 'afrivent:user-profile' user.id%}">Your Dashboard</a>
+                            <a class="dropdown-item" href="{% url 'account:logout' %}">Logout</a>
+                        
                         </div>
-                        {% endif %}
+                        </li>
+                    </ul>
+                    {% endif %}
+                  </nav>
 
-
-                        <!-- <div class="btn-group">
-                                <h5>Hi {{user.username}}</h5>
-                                <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span class="caret"></span></button>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Action</a></li>
-                                    <li><a href="#">Another action</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="#">Separated link</a></li>
-                                </ul>
-                            </div>
-                        <!--Button with dropdown menu-->
-            
-                </div>
-            </div>
+      
     </header>
+
 
     {% block body %}
 

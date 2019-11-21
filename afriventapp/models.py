@@ -46,7 +46,10 @@ class Event(models.Model):
     start_time = models.TimeField(auto_now=False, auto_now_add=False, null= True)
     end_date = models.DateField(auto_now=False, auto_now_add=False, null= True)
     end_time = models.TimeField(auto_now=False, auto_now_add=False, null= True)
-    slug = models.SlugField(blank = True, null = True)  
+    slug = models.SlugField(blank = True, null = True) 
+    ticket_sales_end_date = models.DateField(auto_now=False, auto_now_add=False, null= True)
+
+    
 
 
     class Meta:
@@ -64,8 +67,8 @@ class Event(models.Model):
 class EventTicket(models.Model):
     type = models.CharField("Enter a name for ticket", max_length=50)
     quantity = models.PositiveIntegerField(default = 1)
-    amount = models.DecimalField(max_digits=5, decimal_places=2)
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=100, decimal_places=2)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE,related_name='event_ticket')
 
     class Meta:
         verbose_name = _("EventTicket")

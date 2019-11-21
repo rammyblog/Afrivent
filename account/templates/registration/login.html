@@ -12,8 +12,10 @@
                 <h2>AFRIVENT</h2>
 
             </div>
+            
 
-                <form method="POST"  class="account-form container">
+            <div class="account-form container">
+                <form method="POST"  class="">
                     {% csrf_token %}
                         <div class="form-group col-md-12">
                         <label for="username">Username</label>
@@ -29,9 +31,10 @@
                     </div>  
                     <div class="align_center afri_text_color ">
                     <a class="align_center afri_text_color " href="{% url 'account:register' %}"> Sign up </a> | 
-                    <a class="align_center afri_text_color" href="#">Forgot Password? </a>
+                    <a class="align_center afri_text_color" href="{% url 'password_reset' %}">Forgot Password? </a>
                 </div>
                 </form>
+            </div>
         </section>
    
 

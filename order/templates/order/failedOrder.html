@@ -1,0 +1,36 @@
+{% extends 'afriventapp/layout.html' %}
+{% load static %}
+{% load event_extras %}
+{% block title%} Ticket Page{% endblock %}
+
+{% block stylesheet %} 
+<link rel="stylesheet" href="{% static 'css/ticket.css' %}"> 
+<link rel="stylesheet" href="https://printjs-4de6.kxcdn.com/print.min.css">
+
+{% endblock %}
+
+    {% block body %}
+  <div class="wrapper">
+    <div class="container">
+      <div class="successTicket">
+        <div class="jumbotron">
+          <h1 class="text-center">Order Failed!</h1>
+          <p class="lead text-center"><strong>For some reasons your Order failed</strong> </p>
+          <hr>
+          <a href="{% url 'afrivent:home'%}" class="btn btn-dark">Go Home</a>
+        </div>
+      </div>
+    </div>
+
+</div>
+
+
+  {% endblock %}
+
+  {% block script%}
+
+  <script src="  https://printjs-4de6.kxcdn.com/print.min.js"></script>
+  <script src="{% static 'js/order.js' %}"></script>
+
+  {% endblock %}
+

@@ -10,10 +10,29 @@
         <div class="jumbotron text-center">
             <h2 class="">Hi, {{user_profile.user.first_name}}</h2>
             <h1 class="display-3">Welcome to your dashboard!</h1>
-            <p class="lead"><strong>You have ₦{{user_profile.balance}} in your wallet.</strong> <button class="btn btn-sm btn-success">Request payout now!</button></p>
+            <p class="lead"><strong>You have ₦{{user_profile.balance}} in your wallet.</strong> <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#paymentModal">Request payout now!</button></p>
             <hr>
           </div>
-
+          <!-- Modal -->
+          <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  ...
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+              </div>
+            </div>
+          </div>
 
 
 
@@ -23,53 +42,137 @@
 
 
     <section class="myEvents">
-
-        <h3>Events You Created</h3>  
-            <div class="row">
-                {% for event in events %}
-                
-                    <div class="col-md-6">
-                      <div class="card ">
-                        <img src="{{event.event_image.url}}" class="card-img-top" alt="...">
-                        <div class="card-body">
-                          <h5 class="card-title">
-                          <a href="{{ event.get_absolute_url }}">{{event}}</a>
-                           </h5>
-                          <p class="card-text">Ticket Types: {{ticket}} </p>
-                          <p class="card-text">Event Date: {{event.start_date_time}} </p>
-                          
-                <!-- Button trigger modal -->
-                <button value={{event.id}} type="button" class="btn btn-primary orderDetails" data-toggle="modal" data-target="#exampleModalLong"> <i class="fa fa-history" aria-hidden="true"></i> See order History</button>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="myEvents-tab" data-toggle="tab" href="#myEvents" role="tab" aria-controls="myEvents" aria-selected="true">My Events</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="registered-events-tab" data-toggle="tab" href="#registered-events" role="tab" aria-controls="registered-events" aria-selected="false">Registered Events</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="failed-order-tab" data-toggle="tab" href="#failed-order" role="tab" aria-controls="failed-order" aria-selected="false">Failed Orders</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="change-password-tab"  href="{% url 'password_change' %}" aria-controls="change-password" aria-selected="false">Change Password</a>
+              </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="myEvents" role="tabpanel" aria-labelledby="myEvents-tab">
+                <h3>Events You Created</h3>  
+                <div class="row">
+                    {% for event in events %}
                     
-                    <!-- Modal -->
-                    <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                {{orderDetails}}
-                                {{user_profile.user.username}}
-                            <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                        <div class="col-md-3" style="margin-bottom: 20px">
+                          <div class="card">
+                            <img src="{{event.event_image.url}}" class="card-img-top img-fluid custom-image-height" alt="...">
+                            <div class="card-body">
+                              <h5 class="card-title">
+                              <a href="{{ event.get_absolute_url }}">{{event}}</a>
+                               </h5>
+                               <p class="card-text">Ticket Types:  {% for ticket in event.event_ticket.all %}
+                              <span class="ticket-name-span">{{ticket}}</span>  
+                              {% endfor %}
+                              </p>
+                              
+                              <p class="card-text">Event Date: {{event.end_date}} </p>
+                              
+                    <!-- Button trigger modal -->
+                    <button style="position: absolute;bottom: 0px;" value={{event.id}} type="button" class="btn btn-primary orderDetails" data-toggle="modal" data-target="#exampleModalLong"> <i class="fa fa-history" aria-hidden="true"></i> See order History</button>
+                        
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                  
+                                <h5 class="modal-title" id="exampleModalLongTitle">{{event}} Order Details</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                                <div class="modal-body">
+                                {% for order in event.event_ordered.all %}
+                                      {{order}}
+                                {% endfor %}
+                                </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
                             </div>
-                            <div class="modal-body">
-                            ...
-                            </div>
-                            <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
                             </div>
                         </div>
+                                
+                            </div>
+                          </div>
+                          </div>
+                        {% endfor %}
+                </div> 
+            </div>
+            <div class="tab-pane fade" id="registered-events" role="tabpanel" aria-labelledby="registered-events-tab">
+                <section class="tickets">
+            
+            
+                
+            
+                    <h3>Registered Events</h3>
+            
+                        <div class="row">
+                            {% for ticket in tickets %}
+                            {% if ticket.order.payment_confirmation %}
+                                <div class="col-md-3" style="margin-bottom: 20px">
+                                  <div class="card">
+                                    <img class="card-img-top" src="{{ticket.order.event.event_image.url}}">
+              
+                                    <div class="card-body">
+                                      <h5 class="card-title">
+                                      <a href="{{ ticket.order.event.get_absolute_url }}">{{ticket.order}}</a>
+                                       </h5>
+                                      <p class="card-text">Ticket Type: {{ticket}} </p>
+                                      <p class="card-text">Event Date: {{ticket.order.event.start_date_time}} </p>
+                                      <a href="{{ ticket.order.event.get_absolute_url }}" class="btn btn-primary">Print Details</a>
+                                        
+                                    </div>
+                                  </div>
+                                  </div>
+                                  {% endif %}
+                                {% endfor %}
                         </div>
-                    </div>
-                            
-                        </div>
-                      </div>
-                      </div>
-                    {% endfor %}
-            </div> 
+                                
+                </section>
+              </div>
 
+
+            <div class="tab-pane fade" id="failed-order" role="tabpanel" aria-labelledby="failed-order-tab">    
+              <section class="failedTickets">
+                <h3>Failed Orders</h3>
+                    <div class="row">
+                            {% for order in orders %}
+                            {% if not order.payment_confirmation%}
+                                <div class="col-md-3" style="margin-bottom: 20px">
+                                  <div class="card">
+                                    <img src="{{order.event.event_image.url}}" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                      <h5 class="card-title">
+                                      <a href="{{ order.event.get_absolute_url }}">{{order}}</a>
+                                       </h5>
+                                      <p class="card-text">Ticket Type: {{order}} </p>
+                                      <p class="card-text">Event Date: {{order.event.start_date_time}} </p>
+                                      <p>Total Amount: ₦{{order.total_cost}}</p>
+                                      <p>Order Created Date: {{order.created}}
+                                      <a href="{{order.authorization_url}}" class="btn btn-primary">Pay Again</a>
+                                        
+                                    </div>
+                                  </div>
+                                  </div>
+                                  {% endif %}
+                                {% endfor %}
+                        </div>
+                                
+        
+            </section></div>
+          </div>
+
+        
 
 
         
@@ -77,67 +180,11 @@
     
     </section>
 
-    <section class="tickets">
 
 
     
 
-        <h3>Registered Events</h3>
 
-            <div class="row">
-                {% for ticket in tickets %}
-                {% if ticket.order.payment_confirmation %}
-                    <div class="col-md-4">
-                      <div class="card">
-                        <img class="card-img-top" src="{{ticket.order.event.event_image.url}}">
-  
-                        <div class="card-body">
-                          <h5 class="card-title">
-                          <a href="{{ ticket.order.event.get_absolute_url }}">{{ticket.order}}</a>
-                           </h5>
-                          <p class="card-text">Ticket Type: {{ticket}} </p>
-                          <p class="card-text">Event Date: {{ticket.order.event.start_date_time}} </p>
-                          <a href="{{ ticket.order.event.get_absolute_url }}" class="btn btn-primary">Print Details</a>
-                            
-                        </div>
-                      </div>
-                      </div>
-                      {% endif %}
-                    {% endfor %}
-            </div>
-                    
-    </section>
-
-
-    
-
-    <section class="failedTickets">
-        <h3>Failed Orders</h3>
-            <div class="row">
-                    {% for order in orders %}
-                    {% if not order.payment_confirmation%}
-                        <div class="col-md-4">
-                          <div class="card">
-                            <img src="{{order.event.event_image.url}}" class="card-img-top" alt="...">
-                            <div class="card-body">
-                              <h5 class="card-title">
-                              <a href="{{ order.event.get_absolute_url }}">{{order}}</a>
-                               </h5>
-                              <p class="card-text">Ticket Type: {{order}} </p>
-                              <p class="card-text">Event Date: {{order.event.start_date_time}} </p>
-                              <p>Total Amount: ₦{{order.total_cost}}</p>
-                              <p>Order Created Date: {{order.created}}
-                              <a href="{{order.authorization_url}}" class="btn btn-primary">Pay Again</a>
-                                
-                            </div>
-                          </div>
-                          </div>
-                          {% endif %}
-                        {% endfor %}
-                </div>
-                        
-
-    </section>
 `
 
     </main>

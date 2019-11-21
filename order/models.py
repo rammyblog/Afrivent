@@ -7,7 +7,7 @@ class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     event = models.ForeignKey(Event, related_name='event_ordered', on_delete=models.CASCADE)
     created = models.DateField(auto_now_add=True)
-    total_cost = models.DecimalField(max_digits=15, decimal_places=2)
+    total_cost = models.DecimalField(max_digits=1000, decimal_places=2)
     authorization_url = models.URLField(blank=True)
     ref_code = models.CharField(max_length=250)
     payment_confirmation = models.BooleanField(default=False)

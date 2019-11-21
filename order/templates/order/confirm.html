@@ -4,8 +4,17 @@
 {% block title%} {{user_profile.user.first_name | title }} Create Event | Afrivent {% endblock %}
     {% block body %}
 
-<a href="{% url 'order:process' %}">Confirm</a>
+    <div class="container">
+        <div class="confirm-order-class">
+                <div class="">Click the button below to confirm the order before the timer elapses <span class="clock" id="time"></span> else it will be cancelled automatically </div>
+        
+                
+               <a class="btn btn-danger confirm-order-link" href="{% url 'order:process' %}">Confirm Order</a> 
 
-<div>Confirm the order in the next <span id="time"></span> minutes! else it will be cancelled automatically </div>
+        </div>
+
+    </div>
+
+
 
 {% endblock %}

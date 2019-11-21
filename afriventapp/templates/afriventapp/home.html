@@ -4,10 +4,101 @@
 
     {% block body %}
 
+<main>
+    <section class="header-section">
 
-    <main>
+        <div class="hero-image">
+            <div class="hero-text">
+                <h1 class="hero-heading">All Event Tickets</h1> 
+                  <h2>Choose Yours And Buy Tickets</h2>                
+                <hr>
+                <h4>13 Feb, 2018  -  Total 5000 Tickets</h4>
+    
+            </div>
+        </div> 
 
-<!-- 
+        </section>
+
+   
+
+                <div class="container">
+                    <section class="features">
+                          <div class="row">
+                                    <div class="col-sm-4">
+                                       <i class="fas fa-users fa-2x"></i>
+                                        <h6>Event Registration</h6>
+                                        <p class="features-text">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                                      </div>
+
+
+                                    <div class="col-sm-4">
+                                      <i class="fas fa-volume-up fa-2x"></i>
+                                        
+                                              <h6>Get Update</h6>
+                                              <p class="features-text">Lorem Ipsum is simply dummy text of the printing and typesetting industry</p>
+
+                                            </div>
+                                    
+
+                                    <div class="col-sm-4">
+                                  
+                                                    <i class="fas fa-atom fa-2x"></i>
+                                 
+                                                <h6>Get Knowledge</h6>
+                                                <p class="features-text">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                                 
+                                        </div>
+                                   
+
+                                </div>
+                                
+                    </section>
+                </div>
+
+
+                    <section class="upcoming-events">
+                        <div class="jumbotron">
+                            <div class="container mt-4">
+                                <div class="center-event-grid">
+                                    <div class="upcoming-event-text">
+                                            <h2 class="display-4 text-center">Upcoming Popular Event</h2>
+                                            <p class="lead text-center">Lorem ipsum dolor sit amet, consectetur adipiscing
+                                                 elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                                  Ut enim ad minim veniam, Lorem ipsum dolor sit amet, consectetur adipiscing elit,</p>
+                                        
+
+                                    </div>
+                               
+                                <div class="row">
+                                    {% for event in events %}
+                                    <div class="col-auto mb-3">
+                                        <div class="card" style="width: 18rem;">
+                                            <a href="" class="event-date-a">{{event.start_date}}</a>
+
+                                            <img src="{{event.event_image.url}}" class="card-img-top img-fluid custom-image-height" alt="{{event.event_name}}">
+                                            <div class="card-body">
+                                                <a href="{{event.get_absolute_url}}" class="card-title event-name">{{event.event_name}}</a>
+                                                <p class="event-location">{{event.address}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                         
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            </div>
+                            <button class="btn btn-light more-events-btn">See More</button>
+
+
+                                </div>
+                            </section>
+                    
+
+</main>
+    <!-- <main> -->
+
+<!--
 
         {% if messages %}
       
@@ -30,7 +121,7 @@
         {% endfor %}
     
     {% endif %} -->
-        <section class="hero-image">
+        <!-- <section class="hero-image">
                 <img 
                 src="https://cdn.evbstatic.com/s3-build/perm_001/d4f3f4/django/images/homepage/standard/Desktop/bg-desktop-rapoport-music.jpg" alt="">
         
@@ -100,7 +191,7 @@
         <section class="event_list">
                 <h2>UPCOMING EVENTS</h2>
 
-                      <div class="row ">
+                      <div class="row "> -->
                           <!-- {% for event in events %}
                           <div class="col-sm-4">
                             <div class="card card-deck_margin">
@@ -113,7 +204,7 @@
                             </div>
                           </div>
                           {% endfor %} -->
-      
+<!--       
                         </div>
 
                       <div class="event-list card-deck_margin">
@@ -135,7 +226,8 @@
                       </div>
         </section>
 
-    </main>
+      </main>
+  !-->
 
 
     {% endblock %}

@@ -4,6 +4,7 @@
 {% block title%} {{user_profile.user.first_name | title }} Create Event | Afrivent {% endblock %}
     {% block body %}
 <section class="container">
+<h1 class="text-center">CREATE EVENT</h1>
 <form method="POST" id="createEvent" enctype="multipart/form-data">
     {% csrf_token %} 
     <div class="form-row">
@@ -30,24 +31,30 @@
       <div class="form-row">
       <div class="form-group col-md-3">
         <label for="startDateTime">Event Start Date</label>
-        <input type="date" class="form-control" name="start_date" id="startDateTime" required>
+        <input type="date" class="form-control" name="start_date" id="startDate" required>
       </div>
       <div class="form-group col-md-3">
           <label for="startDateTime">Event Start Time</label>
-          <input type="time" class="form-control" name="start_time" id="startDateTime" required>
+          <input type="time" class="form-control" name="start_time" id="startTime" required>
         </div>
+      
 
       <div class="form-group col-md-3">
         <label for="endDateTime">Event End date</label>
-        <input type="date" class="form-control" name="end_date" id="endDateTime" required> 
+        <input type="date" class="form-control" name="end_date" id="endDate" required> 
       </div>
 
       <div class="form-group col-md-3">
           <label for="startDateTime">Event End Time</label>
-          <input type="time" class="form-control" name="end_time" id="startDateTime" required>
+          <input type="time" class="form-control" name="end_time" id="endTime" required>
         </div>
 
     </div>
+    <div class="form-group">
+        <label for="ticketSalesEndDate">End of ticket sale:</label>
+        <input type="date" class="form-control" name="ticket_sales_end_date" id="ticketSalesEndDate" required> 
+        
+      </div>
     <hr>
     <h2>Create Ticket</h2>
 

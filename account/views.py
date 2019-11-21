@@ -19,12 +19,15 @@ def user_register(request):
         if form.is_valid():
             user=form.save(commit=False)
             # Get all info from form
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password1']
             user.email =  form.cleaned_data['email']
-            to_email = form.cleaned_data['email']
             user.first_name = form.cleaned_data['first_name']
             user.last_name=  form.cleaned_data['last_name']
+            
+            
+
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password1']
+            to_email = form.cleaned_data['email']
             address = form.cleaned_data['address']
             phone_number = form.cleaned_data['phone_number']
             user_bio = form.cleaned_data['bio']
@@ -71,19 +74,25 @@ def user_register(request):
 
     context = {'form': form}
 
-    return render(request, 'account/register.html', context)
+    return render(request, 'registration/register.html', context)
 
 def activate_account(request, uidb64, token):
+    # uid = force_text(urlsafe_base64_decode(uidb64))
+
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
-    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        print(user)
+    except(TypeError, ValueError, OverflowError):
         user = None
     if user is not None and account_activation_token.check_token(user, token):
+        print(uid)
         user.is_active = True
-        user = user.save()
-        profile = UserProfile.objects.get(user=user)
+        print(user)
+        profile = get_object_or_404(UserProfile, user=user)
+        # profile = UserProfile.objects.get(user=user.username)
         profile.verified_email = True
+        user.save()
         profile.save()
         login(request, user)
         # return redirect('home')
@@ -96,16 +105,18 @@ def user_login(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
+
         try:
             auth_login(request, username, password)
         except AttributeError:
-            return HttpResponse('USER HAS BEEN DEACTIVATED')
+            return HttpResponse('Check your mail for a verification mail!')
+
             
         return redirect('afrivent:home')
 
 
     context = {}
-    return render(request, 'account/signIn.html', context)
+    return render(request, 'registration/login.html', context)
 
 
 def user_logout(request):

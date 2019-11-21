@@ -8,11 +8,17 @@ from django.http import JsonResponse
 from django.http import HttpResponse
 from afriventapp.forms import EventForm, TicketForm
 from django.views.generic.edit import UpdateView
+from django.core.paginator import Paginator
 # from afriventapp.models import Event
+from django.contrib.auth.models import User
+from datetime import date
+from django.utils.datastructures import MultiValueDictKeyError
+from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 
 
 def home(request):
-    events = Event.objects.all()
+    events = Event.objects.all()[:9]
     context = {'events': events}
     return render(request, 'afriventapp/home.html', context)
 
@@ -31,14 +37,25 @@ def home(request):
 #         # Add in a QuerySet of all the books
 #         context['tickets'] = EventTicket.objects.filter()
 #         return context
+
+
+def all_events(request):
+    event_list = Event.objects.all()
+    paginator = Paginator(event_list, 2) # Show 25 contacts per page
+    page = request.GET.get('page')
+    events = paginator.get_page(page)
+    return render(request, 'afriventapp/allEvents.html', {'events': events})
+
     
     
 def EventDetailView(request, slug):
     event =  get_object_or_404(Event, slug=slug)
     ticket = EventTicket.objects.filter(event=event)
     ticket_price_range = ticket.aggregate(min_price=Min('amount'), max_price=Max('amount'))
+    events = Event.objects.all()[:9]
     context = {
         'event':event,
+        'events':events,
         'tickets':ticket,
         'ticket_price_range': ticket_price_range
     }
@@ -47,10 +64,12 @@ def EventDetailView(request, slug):
 
 def userdashboard(request, pk):
     # user = get_object_or_404(user)
+    user = get_object_or_404(User, pk=pk)
     user_profile = get_object_or_404(UserProfile, user=pk)
     events = Event.objects.filter(creator = user_profile)
-    orders = Order.objects.filter( user = pk)
-    tickets = OrderItem.objects.filter(user = pk)
+    orders = Order.objects.filter( user = user)
+    tickets = OrderItem.objects.filter(user = user)
+    
     print(user_profile.user.first_name)
     context = {
         'user_profile':user_profile,
@@ -77,17 +96,20 @@ def event_order_details(request, eventId):
         # {'totalOrderPrice': sum(list(totalOrderPrice))}
         )
 
-
+@login_required
 def createEventForm(request):
     return render(request, 'afriventapp/create-event.html')
 
+
+@login_required
 def eventCreated(request):
     if request.method == 'POST':
         queryDict = request.POST
+        
         ticketType = queryDict.getlist('type')
         ticketAmount = queryDict.getlist('amount')
         ticketQuantity = queryDict.getlist('quantity')
-        # print(list(dataDict))
+        print(queryDict)
         event_form = EventForm(request.POST, request.FILES)
         if event_form.is_valid():
             event = event_form.save(commit=False)
@@ -105,6 +127,7 @@ def eventCreated(request):
                         amount = ticketAmount[ticket],
                         event = ticket_event
                     )
+                    
             return HttpResponse(reverse('afrivent:event-detail', args=(event.slug,)))
             
     else:
@@ -131,7 +154,7 @@ class EventUpdate(UpdateView):
         # context.update(kwargs)
         return super().get_context_data(**context)
 
-
+@login_required
 def eventUpdate(request, event_slug):
     event_edit =  get_object_or_404(Event, slug=event_slug)
     ticketquery = EventTicket.objects.filter(event=event_edit)
@@ -166,3 +189,17 @@ def eventUpdate(request, event_slug):
     }
     return render(request, 'afriventapp/edit-event.html', context)
 
+
+def search(request):
+    try:
+        if request.method == 'GET':
+            query = request.GET['q']
+            events = Event.objects.filter(Q(event_name__icontains = request.GET['q']) |
+            Q(creator__user__username__icontains= request.GET['q']) | Q(description__icontains = request.GET['q']) )
+        if events:
+            context = {'events':events, 'query':query}            
+            return render(request, 'afriventapp/search.html', context)
+        else:
+            return render(request, 'afriventapp/404.html')
+    except MultiValueDictKeyError as e:
+        return render(request, 'afriventapp/404.html')

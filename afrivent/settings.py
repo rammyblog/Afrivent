@@ -46,8 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'afriventapp',
-    'account',
     'order',
+    'account',
     'widget_tweaks',
     'phonenumber_field',
     'django_celery_beat',
@@ -129,6 +129,7 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+LOGIN_URL = 'account:login'
 
 
 # Static files (CSS, JavaScript, Images)
