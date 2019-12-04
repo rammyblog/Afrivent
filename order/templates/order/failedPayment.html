@@ -1,7 +1,7 @@
-{% extends 'afriventapp/layout.html' %}
+{% extends 'afriventapp/event_app/layout.html' %}
 {% load static %}
 {% load event_extras %}
-{% block title%} Ticket Page{% endblock %}
+{% block title%} Payment Failed {% endblock %}
 
 {% block stylesheet %} 
 <link rel="stylesheet" href="{% static 'css/ticket.css' %}"> 
@@ -9,8 +9,8 @@
 
 {% endblock %}
 
-    {% block body %}
-  <div class="wrapper">
+    {% block content %}
+  <div class="confirm-order-class">
     <div class="container">
       <div class="successTicket">
         <div class="jumbotron">

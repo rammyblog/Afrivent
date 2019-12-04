@@ -4,7 +4,7 @@ $(document).ready(function(){
 	$(".orderDetails").click(function() {
 
 		let eventId= $(this).val();
-		$('.modal-body').html('');
+		$('.order-modal-body').html('');
 
 		const formatter = new Intl.NumberFormat('en-NG', {
 			style: 'currency',
@@ -23,7 +23,7 @@ $(document).ready(function(){
 			let orderTotal = 0;
 			
 			
-			$('.modal-body').append(`
+			$('.order-modal-body').append(`
 				
 			<p>Total Order: ${orderArr.length}</p>
 			
@@ -32,7 +32,7 @@ $(document).ready(function(){
 			orderArr.forEach(element => {
 				orderTotal += Number(element.total_cost); 
 				
-				$('.modal-body').append(`
+				$('.order-modal-body').append(`
 				<p>Order id: ${element.id} Amount: ${formatter.format(element.total_cost)} 
 				Ordered on: ${element.created}  </p>
 				
@@ -40,7 +40,7 @@ $(document).ready(function(){
 				
 				console.log(orderTotal);
 			});
-			$('.modal-body').append(`
+			$('.order-modal-body').append(`
 			<p>Total Amount made: ${formatter.format(orderTotal)} </p>
 			
 			`)
@@ -60,12 +60,12 @@ $(document).ready(function(){
 		}
     });
 
-	$('.toast').toast('show');
+	// $('.toast').toast('show');
 	
 	var total = 0;
 	let ticketDetails = {};
 	let ticketPrice = {};
-	let ticketName = {}
+	let ticketName = {};
 	let eventID;
 	let finalPrice;
 	$('.quantity-calc').change(function(e) {	

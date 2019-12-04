@@ -13,6 +13,8 @@ urlpatterns = [
     path('create/event', views.createEventForm, name='create-event'),
     path('new/event/created', views.eventCreated, name='event-created'),
     path('search', views.search, name='search'),
+    path('payout/<pk>', views.requestPayout, name='request-payout'),
+    path('generate-ticket/<pk>', views.generateTicket, name='generate-ticket')
 
 
    

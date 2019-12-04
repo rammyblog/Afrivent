@@ -1,43 +1,145 @@
-{% extends 'afriventapp/layout.html' %}
+{% extends 'afriventapp/event_app/layout.html' %}
 {% load static %}
-    {% block body %}
+    {% block content %}
 
-<main>
-    <section class="upcoming-events">
-        <div class="jumbotron">
-            <div class="container mt-4">
-                <div class="center-event-grid">
-                    <div class="upcoming-event-text">
-                            <h2 class="display-4 text-center"> Showing results for  <em>"{{query}}"</em></h2>
-                            <p class="lead text-center">
-                    </div>
-                
-                <div class="row">
-                    {% for event in events %}
-                    <div class="col-auto mb-3">
-                        <div class="card" style="width: 18rem;">
-                            <a href="" class="event-date-a">{{event.start_date}}</a>
+    
+    <div class="site-blocks-cover inner-page-cover overlay"
+    data-aos="fade" data-stellar-background-ratio="0.5" data-aos="fade">
+    <div class="container">
+      <div class="row align-items-center justify-content-center">
+        <div class="col-md-7 text-center" data-aos="fade-up" data-aos-delay="400">
 
-                            <img src="{{event.event_image.url}}" class="card-img-top img-fluid" alt="{{event.event_name}}">
-                            <div class="card-body">
-                                <a href="{{event.get_absolute_url}}" class="card-title event-name">{{event.event_name}}</a>
-                                <p class="event-location">{{event.address}}</p>
-                            </div>
-                        </div>
-                    </div>
+          <h1 class="text-white">Showing results for  <em>"{{query}}"</em></h1>
+    
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="site-section">
+    <div class="container">
+        {% if events %}
+      <div class="row">
+    
+          {% for event in events %}
+          <div class="col-md-8 col-lg-4 mb-3" data-aos="fade-up" data-aos-delay="100">
+              <a href="{{event.get_absolute_url}}" class="unit-9">
+                <div class="image" style="background-image: url('{{event.event_image.url}}');"></div>
+                <div class="unit-9-content">
+                  <h2>{{event.event_name}}</h2>
+                  <span>{{event.start_date}}</span>
+                  <span>Created by {{event.creator}} </span>
+                </div>
+              </a>
+            </div>
+        {% endfor %}
+      </div>
+  
+    </div>
+  
+    <div class="container mt-5" data-aos="fade-up">
+        <nav aria-label="paginator">
+            <ul class="pagination justify-content-center">
+                {% if events.has_previous %}
+                    <li class="page-item">
+                    <a class="page-link" href="?page={{ events.previous_page_number }}" tabindex="-1">Previous</a>
+                  </li>
+              {% endif %}
+              
+              <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
             
-                    {% endfor %}
-                </div>
-            </div>
+              {% if events.number != 1 %}
+              <li class="page-item active" aria-current="page">
+                <a class="page-link" href="#">{{events.number}} <span class="sr-only">(current)</span></a>
+              </li>
+              {% endif %}
 
-            </div>
+              {% if events.has_next %}                      
+              <li class="page-item"><a class="page-link" href="?page={{ events.next_page_number }}"> {{events.next_page_number}}</a></li>
+              
+              <li class="page-item">
+                <a class="page-link" href="?page={{ events.next_page_number }}">Next</a>
+              </li>
 
-                
-                </div>
-            </section>
-                
-
-</main>
-
+              <li class="page-item">
+                    <a class="page-link" href="?page={{ events.paginator.num_pages }}">last</a>
+            </li>
+              {% endif %}
+            </ul>
+          </nav>
+    </div>
+    {% else %}
+    <p>No event found. Try another search term</p>
+{% endif %}
+  </div>
+  
 
     {% endblock %}
+
+
+    <div class="site-blocks-cover inner-page-cover overlay"
+    data-aos="fade" data-stellar-background-ratio="0.5" data-aos="fade">
+    <div class="container">
+      <div class="row align-items-center justify-content-center">
+        <div class="col-md-7 text-center" data-aos="fade-up" data-aos-delay="400">
+
+          <h1 class="text-white">Showing results for  <em>"{{query}}"</em></h1>
+          <p>All the events happening near you</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="site-section">
+    <div class="container">
+      <div class="row">
+          {% for event in events %}
+          <div class="col-md-8 col-lg-4 mb-3" data-aos="fade-up" data-aos-delay="100">
+              <a href="{{event.get_absolute_url}}" class="unit-9">
+                <div class="image" style="background-image: url('{{event.event_image.url}}');"></div>
+                <div class="unit-9-content">
+                  <h2>{{event.event_name}}</h2>
+                  <span>{{event.start_date}}</span>
+                  <span>Created by {{event.creator}} </span>
+                </div>
+              </a>
+            </div>
+        {% endfor %}
+      </div>
+  
+    </div>
+  
+    <div class="container mt-5" data-aos="fade-up">
+        <nav aria-label="paginator">
+            <ul class="pagination justify-content-center">
+                {% if events.has_previous %}
+                    <li class="page-item">
+                    <a class="page-link" href="?page={{ events.previous_page_number }}" tabindex="-1">Previous</a>
+                  </li>
+              {% endif %}
+              
+              <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
+            
+              {% if events.number != 1 %}
+              <li class="page-item active" aria-current="page">
+                <a class="page-link" href="#">{{events.number}} <span class="sr-only">(current)</span></a>
+              </li>
+              {% endif %}
+
+              {% if events.has_next %}                      
+              <li class="page-item"><a class="page-link" href="?page={{ events.next_page_number }}"> {{events.next_page_number}}</a></li>
+              
+              <li class="page-item">
+                <a class="page-link" href="?page={{ events.next_page_number }}">Next</a>
+              </li>
+
+              <li class="page-item">
+                    <a class="page-link" href="?page={{ events.paginator.num_pages }}">last</a>
+            </li>
+              {% endif %}
+            </ul>
+          </nav>
+
+    </div>
+  </div>
+  

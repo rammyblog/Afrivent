@@ -1,0 +1,124 @@
+{% extends 'afriventapp/event_app/layout.html' %}
+{% load static %}
+
+{% block content %}
+
+  
+  <div class="site-blocks-cover overlay" style="background-image: url('https://d29u17ylf1ylz9.cloudfront.net/eventpro/eventpro/img/event/event-detail-2.jpg');" data-aos="fade" data-stellar-background-ratio="0.5" data-aos="fade">
+    <div class="container">
+      <div class="row align-items-center justify-content-center">
+        <div class="col-md-7 text-center" data-aos="fade-up" data-aos-delay="400">
+          <h1 class="mb-4">All Event Tickets</h1>
+          <hr>
+          <p>Choose Yours And Buy Tickets</p>
+          <p><a href="{% url 'afrivent:all-events' %}" class="btn btn-primary px-4 py-3">All Events</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="site-section">
+    <div class="container">
+      <div class="row">
+        <div class="site-section-heading text-center mb-5 w-border col-md-6 mx-auto">
+          <h2 class="mb-5">Upcoming Events</h2>
+          <p>Create and book events with great ease</p>
+        </div>
+      </div>
+      <div class="row">
+            {% for event in events %}
+        <div class="col-md-6 col-lg-3 mb-3" data-aos="fade-up" data-aos-delay="100">
+          <a href="{{event.get_absolute_url}}" class="unit-9">
+            <div class="image" style="background-image: url('{{event.event_image.url}}');"></div>
+            <div class="unit-9-content">
+              <h2>{{event.event_name}}</h2>
+              <span>{{event.start_date}}</span>
+              <span>Created by {{event.creator}} </span>
+            </div>
+          </a>
+        </div>
+            {% endfor %}
+
+  
+      </div>
+    </div>
+  </div>
+
+
+
+  
+  <div class="site-section bg-dark block-13">
+    <div class="container" data-aos="fade-up">
+      <div class="row">
+        <div class="site-section-heading text-center mb-5 w-border col-md-6 mx-auto">
+          <h2 class="mb-5">Love By Our Users</h2>
+
+        </div>
+      </div>
+      <div class="nonloop-block-13 owl-carousel">
+        
+        <div class="text-center p-3 p-md-5 bg-white">
+          <div class="mb-4">            
+            <img src="images/person_1.jpg" alt="Image" class="w-50 mx-auto img-fluid rounded-circle">
+          </div>
+          <div class="text-black">
+            <h3 class="font-weight-light h5">Megan Smith</h3>
+            <p class="font-italic">&ldquo;Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et, iusto. Aliquam illo, cum sed ea? Ducimus quos, ea?&rdquo;</p>
+          </div>
+        </div>
+
+        <div class="text-center p-3 p-md-5 bg-white">
+          <div class="mb-4">            
+            <img src="images/person_2.jpg" alt="Image" class="w-50 mx-auto img-fluid rounded-circle">
+          </div>
+          <div class="text-black">
+            <h3 class="font-weight-light h5">Brooke Cagle</h3>
+            <p class="font-italic">&ldquo;Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et, iusto. Aliquam illo, cum sed ea? Ducimus quos, ea?&rdquo;</p>
+          </div>
+        </div>
+
+        <div class="text-center p-3 p-md-5 bg-white">
+          <div class="mb-4">            
+            <img src="images/person_3.jpg" alt="Image" class="w-50 mx-auto img-fluid rounded-circle">
+          </div>
+          <div class="text-black">
+            <h3 class="font-weight-light h5">Philip Martin</h3>
+            <p class="font-italic">&ldquo;Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et, iusto. Aliquam illo, cum sed ea? Ducimus quos, ea?&rdquo;</p>
+          </div>
+        </div>
+
+        <div class="text-center p-3 p-md-5 bg-white">
+          <div class="mb-4">            
+            <img src="images/person_1.jpg" alt="Image" class="w-50 mx-auto img-fluid rounded-circle">
+          </div>
+          <div class="text-black">
+            <h3 class="font-weight-light h5">Steven Ericson</h3>
+            <p class="font-italic">&ldquo;Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et, iusto. Aliquam illo, cum sed ea? Ducimus quos, ea?&rdquo;</p>
+          </div>
+        </div>
+
+        <div class="text-center p-3 p-md-5 bg-white">
+          <div class="mb-4">            
+            <img src="images/person_2.jpg" alt="Image" class="w-50 mx-auto img-fluid rounded-circle">
+          </div>
+          <div class="text-black">
+            <h3 class="font-weight-light h5">Nathan Dumlao</h3>
+            <p class="font-italic">&ldquo;Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et, iusto. Aliquam illo, cum sed ea? Ducimus quos, ea?&rdquo;</p>
+          </div>
+        </div>
+
+        <div class="text-center p-3 p-md-5 bg-white">
+          <div class="mb-4">            
+            <img src="images/person_4.jpg" alt="Image" class="w-50 mx-auto img-fluid rounded-circle">
+          </div>
+          <div class="text-black">
+            <h3 class="font-weight-light h5">Brook Smith</h3>
+            <p class="font-italic">&ldquo;Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et, iusto. Aliquam illo, cum sed ea? Ducimus quos, ea?&rdquo;</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>  
+  
+{% endblock %}

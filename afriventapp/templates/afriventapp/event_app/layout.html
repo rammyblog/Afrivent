@@ -1,0 +1,226 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>{% block title %} Afrivent Event App{% endblock %}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito+Sans:200,300,400,700,900|Oswald:400,700"> 
+    <link rel="stylesheet" href="fonts/icomoon/style.css">
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href=" {% static 'css/magnific-popup.css' %}">
+    <link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'css/mediaelementplayer.css' %}">
+    <link rel="stylesheet" href="{% static 'css/animate.css' %}">
+    <link rel="stylesheet" href="{% static 'fonts/flaticon/font/flaticon.css' %} ">
+    <link rel="stylesheet" href="{% static 'css/fl-bigmug-line.css' %}">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.css" integrity="sha256-He3QEBKoL/nMXlVsoM7S2C2kjFQqS5L+mgA+F8LpG+U=" crossorigin="anonymous" />
+
+    
+  
+    <link rel="stylesheet" href=" {% static 'css/aos.css' %}">
+    <link rel="stylesheet" href=" {% static 'css/styles.css' %}">
+
+    {% block stylesheet %} {% endblock %}
+    <link rel="stylesheet" href="{% static 'css/event_style.css' %}">
+
+    
+  </head>
+  <body>
+  
+    
+  
+  <div class="container">
+    
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark ">
+          <a href="{% url 'afrivent:home' %}" class="text-white h2 mr-3"><strong>AFRIVENT<span class="text-primary">.</span></strong></a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+            
+              <li class="nav-item">
+                  <a class='nav-link text-white h4' href="{% url 'afrivent:all-events' %}">Events</a>
+              </li>
+              <li class="nav-item">
+                  <a class='nav-link text-white h4' href="{% url 'afrivent:create-event' %}">Create Event</a>
+              </li>
+              {% if not user.is_authenticated %}
+                <li class="nav-item"><a class='nav-link text-white h4' href="{% url 'account:login' %}">Sign In</a></li>
+                <li class="nav-item"><a class='nav-link text-white h4' href="{% url 'account:register' %}">Sign Up</a></li>
+              
+                {% endif %}
+             
+         
+       
+            </ul>
+            <form class="form-inline my-2 my-lg-0" method="GET" action="{% url 'afrivent:search'%}">
+              <input class="form-control mr-sm-2" type="search" placeholder="Search" name="q" aria-label="Search">
+              <button class="btn  my-2 my-sm-0" type="submit">Search</button>
+            </form>
+            {% if user.is_authenticated %}
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Howdy {{ user.username | title }}
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="{% url 'afrivent:user-profile' user.id%}">Your Dashboard</a>
+              <a class="dropdown-item" href="{% url 'account:logout' %}">Logout</a>
+ 
+            </div>
+      
+            {% endif %}
+          </div>
+        </nav>
+  </div>
+
+    <!-- <div class="site-navbar mt-4">
+        <div class="container py-1"> 
+          <div class="row align-items-center">
+            
+            <div class="col-8 col-md-8 col-lg-4">
+              <h1 class="mb-0"><a href="{% url 'afrivent:home' %}" class="text-white h2 mb-0"><strong>AFRIVENT<span class="text-primary">.</span></strong></a></h1>
+            </div>
+          
+            <div class="col-4 col-md-4 col-lg-8">
+              <nav class="site-navigation text-right text-md-right" role="navigation">
+
+                <div class="d-inline-block d-lg-none ml-md-0 mr-auto py-3"><a href="#" class="site-menu-toggle js-menu-toggle text-white"><span class="icon-menu h3"></span></a></div>
+
+                <ul class="site-menu js-clone-nav d-none d-lg-block">
+                  <li class="active">
+                    <a href="index.html">Home</a>
+                  </li>
+                  <li><a href="{% url 'afrivent:all-events' %}">Events</a></li>
+                  <li><a href="{% url 'afrivent:create-event' %}">Create Event</a></li>
+                  <li><a href="#!">About</a></li>
+                  {% if not user.is_authenticated %}
+                  <li><a href="{% url 'account:login' %}">Sign In</a></li>
+                  <li><a href="{% url 'account:register' %}">Sign Up</a></li>
+                  {% else %}
+                  <li class="has-children">
+                    <a href="shows.html">Howdy {{ user.username | title }}</a>
+                    <ul class="dropdown arrow-top">
+                      <li><a href="{% url 'afrivent:user-profile' user.id%}">Your Dashboard</a></li>
+                      <li><a href="{% url 'account:logout' %}">Logout</a></li>
+                    </ul>
+                  </li>
+                  {% endif %}
+
+                  
+                </ul>
+              </nav>
+            </div>
+           
+
+          </div>
+        </div>
+      </div>
+  </div>
+    <div class="site-mobile-menu">
+      <div class="site-mobile-menu-header">
+        <div class="site-mobile-menu-close mt-3">
+        <span class="icon-close2 js-menu-toggle"></span>
+      </div>
+      </div>
+    <div class="site-mobile-menu-body"></div>
+  </div>  -->
+
+
+    {% block content %}
+
+    {% endblock %}
+
+
+    <div class="bg-primary" data-aos="fade">
+      <div class="container">
+        <div class="row">
+          <a href="#" class="col-2 text-center py-4 social-icon d-block"><span class="icon-facebook text-white"></span></a>
+          <a href="#" class="col-2 text-center py-4 social-icon d-block"><span class="icon-twitter text-white"></span></a>
+          <a href="#" class="col-2 text-center py-4 social-icon d-block"><span class="icon-instagram text-white"></span></a>
+          <a href="#" class="col-2 text-center py-4 social-icon d-block"><span class="icon-linkedin text-white"></span></a>
+          <a href="#" class="col-2 text-center py-4 social-icon d-block"><span class="icon-pinterest text-white"></span></a>
+          <a href="#" class="col-2 text-center py-4 social-icon d-block"><span class="icon-youtube text-white"></span></a>
+        </div>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-4">
+            <div class="mb-5">
+              <h3 class="footer-heading mb-4">About Afivent</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe pariatur reprehenderit vero atque, consequatur id ratione, et non dignissimos culpa? Ut veritatis, quos illum totam quis blanditiis, minima minus odio!</p>
+            </div>
+       
+          </div>
+          <div class="col-lg-4 mb-5 mb-lg-0">
+            <div class="row mb-5">
+              <div class="col-md-12">
+                <h3 class="footer-heading mb-4">Navigations</h3>
+              </div>
+                <ul class="list-unstyled">
+                  <li><a href="#">Home</a></li>
+                  <li><a href="#">DJs</a></li>
+                  <li><a href="#">News</a></li>
+                  <li><a href="#">Top 20 of the week</a></li>
+                </ul>
+
+            </div>
+
+
+          </div>
+
+          <div class="col-lg-4 mb-5 mb-lg-0">
+           
+            <div class="row">
+              <div class="col-md-12">
+                <h3 class="footer-heading mb-4">Follow Us</h3>
+
+                <div>
+                  <a href="#" class="pl-0 pr-3"><span class="icon-facebook"></span></a>
+                  <a href="#" class="pl-3 pr-3"><span class="icon-twitter"></span></a>
+                  <a href="#" class="pl-3 pr-3"><span class="icon-instagram"></span></a>
+                  <a href="#" class="pl-3 pr-3"><span class="icon-linkedin"></span></a>
+                </div>
+              </div>
+            </div>
+
+            
+
+          </div>
+          
+        </div>
+      </div>
+    </footer>
+
+
+  <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+  <script src="{% static 'js/jquery-migrate-3.0.1.min.js' %}"></script>
+  <script src="{% static 'js/jquery-ui.js' %}"></script>
+  <script src="{% static 'js/popper.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+  <script src="{% static 'js/jquery.stellar.min.js' %}"></script>
+  <script src="{% static 'js/jquery.countdown.min.js' %}"></script>
+  <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap-datepicker.min.js' %}"></script>
+  <script src="{% static 'js/aos.js' %}"></script>
+  <script src="{% static 'js/event_main.js' %}"></script>
+   <script src="{% static 'js/main.js' %}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js" integrity="sha256-yNbKY1y6h2rbVcQtf0b8lq4a+xpktyFc3pSYoGAY1qQ=" crossorigin="anonymous"></script>
+  
+  {% block script%}{% endblock %}
+
+  
+
+    
+  </body>
+</html>

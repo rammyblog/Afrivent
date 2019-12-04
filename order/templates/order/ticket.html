@@ -1,11 +1,11 @@
 {% load static %}
 {% load humanize %}
-
+<link rel="stylesheet" href=" {% static 'css/ticket.css' %}">
 
 <div class="container custom-container">
     <div class="ticketBackground" id="ticket">
         <div class="col-md-3 barcodeContainer">
-            <img class="img-fluid center--image" src="{{order.order_barcode.url}}" alt="" srcset="">
+            <img class="img-fluid center--image" src={{barcode}} alt="" srcset="">
         </div>
 
 
@@ -44,7 +44,7 @@
                 <div class="col-md-4 col-sm-4 col-xs-4">
                     <div class="ticket__single__info">
                         <p class="text-muted ticket-constant ">Ticket Type</p>
-                        {% for order in order_items%}
+                        {% for order in order_items %}
                         <p class="ticket-info ticket-type">{{order.ticket}} - x{{order.quantity}}</p>
                         {% endfor %}
 
@@ -75,3 +75,7 @@
     </div>
 
 
+
+</div>
+</div>
+</div>

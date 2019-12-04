@@ -1,10 +1,12 @@
-{% extends 'afriventapp/layout.html' %}
+{% extends 'afriventapp/event_app/layout.html' %}
 {% load static %}
 {% load event_extras %}
 {% block title%} {{user_profile.user.first_name | title }} Dashboard | Afrivent {% endblock %}
 
-    {% block body %}
+    {% block content %}
     <main class="container events-dashboard">
+        {% if request.user == user.username %}
+
     <section class="user-details">
 
         <div class="jumbotron text-center">
@@ -14,7 +16,7 @@
             <hr>
           </div>
           <!-- Modal -->
-          <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal fade" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="requestPayoutModal" aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
@@ -24,11 +26,14 @@
                   </button>
                 </div>
                 <div class="modal-body">
-                  ...
+                  ₦{{user_profile.balance}} will be transferred to 
+                  <p class="mb-0">Account Name: {{user_profile.account_name}}</p>
+                  <p class="mb-0">Account Number: {{user_profile.account_number}}</p>
+                  <p class="mb-0">Bank Name: {{user_profile.bank_name}}</p>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary">Save changes</button>
+                  <a style="color: white" class="btn btn-primary" href="{% url 'afrivent:request-payout' user.id %}">Request Payout Now</a>
                 </div>
               </div>
             </div>
@@ -37,8 +42,11 @@
 
 
 
+
     </section>
 
+
+    {% endif %}
 
 
     <section class="myEvents">
@@ -49,12 +57,14 @@
             <li class="nav-item">
               <a class="nav-link" id="registered-events-tab" data-toggle="tab" href="#registered-events" role="tab" aria-controls="registered-events" aria-selected="false">Registered Events</a>
             </li>
+            {% if request.user == user %}
             <li class="nav-item">
               <a class="nav-link" id="failed-order-tab" data-toggle="tab" href="#failed-order" role="tab" aria-controls="failed-order" aria-selected="false">Failed Orders</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="change-password-tab"  href="{% url 'password_change' %}" aria-controls="change-password" aria-selected="false">Change Password</a>
               </li>
+            {% endif %}
           </ul>
           <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="myEvents" role="tabpanel" aria-labelledby="myEvents-tab">
@@ -77,7 +87,7 @@
                               <p class="card-text">Event Date: {{event.end_date}} </p>
                               
                     <!-- Button trigger modal -->
-                    <button style="position: absolute;bottom: 0px;" value={{event.id}} type="button" class="btn btn-primary orderDetails" data-toggle="modal" data-target="#exampleModalLong"> <i class="fa fa-history" aria-hidden="true"></i> See order History</button>
+                    <button value={{event.id}} type="button" class="btn btn-primary orderDetails" data-toggle="modal" data-target="#exampleModalLong"> <i class="fa fa-history" aria-hidden="true"></i> See order History</button>
                         
                         <!-- Modal -->
                         <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
@@ -90,10 +100,10 @@
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                                 </div>
-                                <div class="modal-body">
-                                {% for order in event.event_ordered.all %}
+                                <div class="order-modal-body">
+                                <!-- {% for order in event.event_ordered.all %}
                                       {{order}}
-                                {% endfor %}
+                                {% endfor %} -->
                                 </div>
                                 <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -117,20 +127,25 @@
                     <h3>Registered Events</h3>
             
                         <div class="row">
-                            {% for ticket in tickets %}
-                            {% if ticket.order.payment_confirmation %}
+                            {% for order in orders %}
+                            {% if order.payment_confirmation %}
                                 <div class="col-md-3" style="margin-bottom: 20px">
                                   <div class="card">
-                                    <img class="card-img-top" src="{{ticket.order.event.event_image.url}}">
+                                    <img class="card-img-top" src="{{order.event.event_image.url}}">
               
                                     <div class="card-body">
                                       <h5 class="card-title">
-                                      <a href="{{ ticket.order.event.get_absolute_url }}">{{ticket.order}}</a>
+                                      <a href="{{ order.event.get_absolute_url }}">{{order.event.event_name}}</a>
                                        </h5>
-                                      <p class="card-text">Ticket Type: {{ticket}} </p>
-                                      <p class="card-text">Event Date: {{ticket.order.event.start_date_time}} </p>
-                                      <a href="{{ ticket.order.event.get_absolute_url }}" class="btn btn-primary">Print Details</a>
-                                        
+                                       <p class="card-text">Ticket Types:  {% for ticket in order.event.event_ticket.all %}
+                                          <span class="ticket-name-span">{{ticket}}</span>  
+                                          {% endfor %}
+                                          </p>
+                                      <p class="card-text">Event Date: {{order.event.start_time}} </p>
+                                                   <!-- Button trigger modal --><a class="btn btn-primary" href="{% url 'afrivent:generate-ticket' order.id %}"> 
+                      <i class="fa fa-print" aria-hidden="true"></i> Print Details </a>
+                        
+                 
                                     </div>
                                   </div>
                                   </div>

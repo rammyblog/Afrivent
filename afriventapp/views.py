@@ -15,12 +15,19 @@ from datetime import date
 from django.utils.datastructures import MultiValueDictKeyError
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
+from order.generate_barcode import barcodeGenerator
+import base64
+from django.core.files.base import ContentFile
 
 
 def home(request):
     events = Event.objects.all()[:9]
-    context = {'events': events}
-    return render(request, 'afriventapp/home.html', context)
+    top_events = Event.objects.all()[:2]
+    context = {
+        'events': events,
+        'top_events': top_events
+        }
+    return render(request, 'afriventapp/event_app/home.html', context)
 
 
 # class EventDetailView(DetailView):
@@ -41,10 +48,10 @@ def home(request):
 
 def all_events(request):
     event_list = Event.objects.all()
-    paginator = Paginator(event_list, 2) # Show 25 contacts per page
+    paginator = Paginator(event_list, 6) # Show 25 contacts per page
     page = request.GET.get('page')
     events = paginator.get_page(page)
-    return render(request, 'afriventapp/allEvents.html', {'events': events})
+    return render(request, 'afriventapp/event_app/events.html', {'events': events})
 
     
     
@@ -59,25 +66,65 @@ def EventDetailView(request, slug):
         'tickets':ticket,
         'ticket_price_range': ticket_price_range
     }
-    return render(request, 'afriventapp/event-dashboard.html', context)
+    return render(request, 'afriventapp/event_app/single.html', context)
 
-
+@login_required
 def userdashboard(request, pk):
     # user = get_object_or_404(user)
     user = get_object_or_404(User, pk=pk)
     user_profile = get_object_or_404(UserProfile, user=pk)
     events = Event.objects.filter(creator = user_profile)
     orders = Order.objects.filter( user = user)
+    # registeredOrders = Order.objects.filter(user =)
     tickets = OrderItem.objects.filter(user = user)
-    
-    print(user_profile.user.first_name)
+    print(request.user.username, user)
     context = {
         'user_profile':user_profile,
         'events':events,
         'orders':orders,
-        'tickets': tickets
+        'tickets': tickets,
+        'user':user
+
     }
     return render(request, 'afriventapp/user-dashboard.html', context)
+
+@login_required
+def generateTicket(request, pk):
+    order = get_object_or_404(Order, pk=pk)
+    order_items = OrderItem.objects.filter(order=order)
+    reference_code = order.ref_code
+    if order.payment_confirmation == True:
+        barcode = barcodeGenerator(order.id, order.event, reference_code, order.order_unique_id, order.user)
+        # format, imgstr = barcode.split(';base64,') 
+        # print(barcode)
+        # ext = format.split('/')[-1] 
+        # barcode = ContentFile(base64.b64decode(imgstr), name='{}.'.format(order.id) + ext)
+
+
+    else:
+        return render(request, 'afriventapp/404.html', context={
+            'order':order
+        })
+ 
+    context = {
+        'order': order,
+        'order_items' : order_items,
+        'barcode':barcode
+    }
+
+    return render(request, 'order/ticket.html', context) 
+
+
+def requestPayout(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    user_profile = get_object_or_404(UserProfile, user=pk)
+    #send_mail()`
+    user_profile.balance -= user_profile.balance
+    user_profile.save()
+    context = {}
+    return render(request, 'afriventapp/requestPayout.html', context)
+    
+
 
 
 def event_order_details(request, eventId):
@@ -196,10 +243,13 @@ def search(request):
             query = request.GET['q']
             events = Event.objects.filter(Q(event_name__icontains = request.GET['q']) |
             Q(creator__user__username__icontains= request.GET['q']) | Q(description__icontains = request.GET['q']) )
+        context = {'events':events, 'query':query}
         if events:
-            context = {'events':events, 'query':query}            
+            
+            print(events)            
             return render(request, 'afriventapp/search.html', context)
         else:
-            return render(request, 'afriventapp/404.html')
+            return render(request, 'afriventapp/search.html')
     except MultiValueDictKeyError as e:
+        print(e)
         return render(request, 'afriventapp/404.html')

@@ -1,0 +1,29 @@
+{% extends 'afriventapp/event_app/layout.html' %}
+{% load static %}
+{% load event_extras %}
+{% block title%} Payout Success{% endblock %}
+
+{% block stylesheet %} 
+
+<link rel="stylesheet" href="https://printjs-4de6.kxcdn.com/print.min.css">
+
+{% endblock %}
+
+{% block content %}
+  <div class="center-event-grid">
+    <div class="container">
+      <div class="successTicket">
+        <div class="jumbotron">
+          <h1 class="text-center">Payout Success!</h1>
+          <p class="lead text-center"><strong>Payout in progress, Check your email for confirmation and futher instructions</strong> </p>
+          <hr>
+          <a href="{% url 'afrivent:home'%}" class="btn btn-dark">Go Home</a>
+        </div>
+      </div>
+    </div>
+
+</div>
+
+
+  {% endblock %}
+

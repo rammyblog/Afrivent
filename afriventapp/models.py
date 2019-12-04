@@ -29,7 +29,7 @@ class UserProfile(models.Model):
         return self.user.username
 
     def get_absolute_url(self):
-        return reverse("afrivent:user-dashboard", kwargs={"pk": self.pk})
+        return reverse("afrivent:user-profile", kwargs={"pk": self.pk})
 
 
 

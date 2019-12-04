@@ -485,24 +485,24 @@ section.features {
 .event-date > p{
     float: right;
 }
-
+/* 
 .event-details{
     background-color: #fff
-}
+/* }  */
 
 .event-details > .card{
-    background: #fff;
-}
+    background: none;
+} 
 
 .event-details > p{
   /* clear: both; */
   font-weight: 700;
-  color: #011627;
+  /* color: #011627; */
 
 }
 
 .event-details > .card{
-    border: none;
+    border: 1px solid #f9f9f9;
 }
 
 
@@ -690,7 +690,8 @@ h5{
 
 .modal-grid{
     display: grid;
-    grid-template-columns: repeat(2, 1fr)
+    grid-template-columns: repeat(2, 1fr);
+    color: black;
 }
 
 
@@ -860,3 +861,13 @@ ul {
     height: 28px;
     width: max-content;
   }
+
+
+.center-flex{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+
+}

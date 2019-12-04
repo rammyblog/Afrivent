@@ -1,8 +1,8 @@
-{% extends 'afriventapp/layout.html' %}
+{% extends 'afriventapp/event_app/layout.html' %}
 {% load static %}
 {% load event_extras %}
-{% block title%} {{user_profile.user.first_name | title }} Edit  {{event.event_name}} | AfriVent {% endblock %}
-    {% block body %}
+{% block title%} Edit  {{event.event_name}} | AfriVent {% endblock %}
+{% block content %}
 <section class="container">
 <form method="POST" id="editEvent" enctype="multipart/form-data">
     {% csrf_token %} 

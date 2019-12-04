@@ -57,7 +57,7 @@ def orderConfimation(request):
     'event' : event,
     }
 
-    return render(request, 'order/confirm.html', context)
+    return render(request, 'order/celeryTimerConfirm.html', context)
 
 
 @login_required
@@ -111,7 +111,7 @@ def orderProcess(request):
     context = {'order':order}
 
     
-    return render(request, 'order/confirm.html', context)
+    return render(request, 'order/celeryTimerConfirm.html', context)
 
 
 @never_cache
@@ -122,13 +122,6 @@ def processPayment(request):
     task_id = request.session['task_id']
     current_app.control.revoke(task_id)
     order = get_object_or_404(Order, pk=order_id)
-    print(reconcileOrder.AsyncResult(task_id).state)
-
-    # if reconcileOrder.AsyncResult(task_id).state == 'REVOKED':
-    #     return render(request, 'order/failed.html', context={
-    #         'order': order
-    #     } )
-    # else:
     PaystackConfig.SECRET_KEY  = 'sk_test_4bc9c2030fe11485c51ce1692428ce37663c9d6c';
     PaystackConfig.PUBLIC_KEY = 'pk_test_66242613f73c8034560a3eecf9d248787f776bdb';
     orderAmountKobo = order.total_cost *  100
@@ -156,11 +149,7 @@ def confirmPayment(request):
         order.payment_confirmation = True
         user = get_object_or_404(UserProfile, pk=order.event.creator.id)
         barcode = barcodeGenerator(order.id, order.event, reference_code, order.order_unique_id, user)
-        format, imgstr = barcode.split(';base64,') 
-        ext = format.split('/')[-1] 
-        barcode = ContentFile(base64.b64decode(imgstr), name='{}.'.format(order.id) + ext)
         user.balance += order.total_cost
-        order.order_barcode = barcode
         user.save()
         order.save()
             # ticketType.quantity -= quantity
@@ -182,7 +171,8 @@ def confirmPayment(request):
  
     context = {
         'order': order,
-        'order_items' : order_items
+        'order_items' : order_items,
+        'barcode': barcode
     }
 
     return render(request, 'order/success.html', context) 

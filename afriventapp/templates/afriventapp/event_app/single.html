@@ -1,0 +1,208 @@
+{% extends 'afriventapp/event_app/layout.html' %}
+{% load static %}
+{% load event_extras %}
+
+{% block title %} {{event}} {% endblock %}
+
+{% block stylesheet %}<link href="{%static 'css/styles.css'%}" rel="stylesheet">{% endblock %}
+{% block content %}
+  <div class="site-mobile-menu">
+    <div class="site-mobile-menu-header">
+      <div class="site-mobile-menu-close mt-3">
+        <span class="icon-close2 js-menu-toggle"></span>
+      </div>
+    </div>
+    <div class="site-mobile-menu-body"></div>
+  </div> <!-- .site-mobile-menu -->
+
+  <div class="site-blocks-cover inner-page-cover overlay" style="background-image: url('{{event.event_image.url}}');"
+    data-aos="fade" data-stellar-background-ratio="0.5" data-aos="fade">
+    <div class="container">
+      <div class="row align-items-center justify-content-center">
+        <div class="col-md-7 text-center" data-aos="fade-up" data-aos-delay="400">
+
+          <h1 class="text-white">{{event.event_name}}</h1>
+          <p>{{event.start_date}} - {{event.end_date}} <span class="mx-3">&bullet;</span> By <a href="{{event.creator.get_absolute_url}}">{{event.creator | title }}</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="site-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8">
+  
+          <figure>
+            <img src="{{event.event_image.url}}" alt="{{event.event_name}}" class="img-fluid">
+            <figcaption>{{event.event_name}}</figcaption>
+          </figure>
+  
+          <p>{{event.description}}</p>
+ 
+  
+  
+        </div>
+  
+  
+        <div class="col-sm-4">
+            <div class="event-details">
+                <div class="card">
+                        <div class="card-header event-date">
+                               <p>Date: {{event.end_date}}</p>
+                               {% if request.user == event.creator.user %}
+                               <a href="{% url 'afrivent:edit-event' event.slug %}">Edit Event</a>
+                               {% endif %}
+                        </div>
+                        <div class="card-body">
+                          <h5 class="card-title">{{event.event_name}} </h5>
+                         <p> <strong>Event Creator:</strong><small class="card-text"> {{event.creator | title}}</small></p> 
+                         <p> <strong>Price:</strong><small class="">₦ {{ticket_price_range.min_price |floatformat}} -  ₦ {{ticket_price_range.max_price |floatformat}}</small> </p>
+    
+                          <!-- Button trigger modal -->
+                          <button type="button" class="btn btn-primary" id="ticket-modal" data-toggle="modal" data-target="#ticketModal">
+                            Get Tickets
+                          </button>
+    
+                          <!-- Modal -->
+    
+                          <div class="modal-grid">
+                            
+                          <div class="modal fade" id="ticketModal" tabindex="-1" role="dialog" aria-labelledby="ticketModalTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="ticketModalTitle" class="align_center">Register</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                                <div class="modal-body modal-grid">
+    
+                                    <div class="order-calc-grid">
+                                        <img src="{{event.event_image.url}}" class="img-thumbnail order-img" >
+                                        <!-- Ticket Type: <p class="ticketType"></p>
+                                        Total: <p class="total_amount"> </p> -->
+                                        <div class="col-sm-12">
+                       
+                                            <div class="order-details-wrapper">
+                                                <!-- <h2>your order</h2> -->
+                                                <div class="order-details">
+                                                    <form action="#">
+                                                        <ul>
+                                                            <li><p class="strong">product</p><p class="strong">total</p></li>
+                                                            <li><p class="ticketType">  <p class="ticketTypeAmount"></p></li>
+                                                            <li><p class="strong">order total</p ><p class="strong total_amount "></p></li>
+                                                        </ul>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                      </div>
+    
+    
+    <!--                             
+                                <div class="event_ticket_modal">
+         
+                                  <select name="" id=""></select>
+                                </div> -->
+    
+    
+                                <form method="post" id="orderForm" method="POST">
+                                    <p>Sales end: {{event.ticket_sales_end_date}}</p>
+                                    {% csrf_token %}
+                                    {% for ticket in tickets  %}
+                                  <div class="form-group" id="order-form">
+                                    <h4 style="display: inline">{{ticket.type}}</h4>
+                                    <p>₦ {{ticket.amount}}</p>
+        
+        
+                                     <select  class="form-control quantity-calc" required>
+                                      <option
+    
+                                      data-type='{{ticket.id}}' data-quantity="0"
+                                      data-price="0"
+                                      data-event="{{event.id}}"
+                                      data-ticket_name="{{ticket.type}}"
+                                      
+                                      value="0"></option>
+    
+                                      {% for quantity in ticket.quantity|range_value %}
+    
+    
+                                      <option  data-type='{{ticket.id}}' data-quantity="{{forloop.counter0}}"
+                                       data-price="{{ticket.amount}}"
+                                       data-event="{{event.id}}"
+                                       data-ticket_name="{{ticket.type}}"> {{forloop.counter0}}</option>
+                                      <!-- <input type="hidden" value="{{ticket.amount}}" -->
+                                      {% endfor %}
+                                    </select>
+                                  </div>
+                                  {% endfor %}
+    
+                                  <button type="submit" class="btn btn-danger">Place Order</button>
+                                
+                                </form>
+    
+    
+                                
+                                </div>
+                                
+                              </div>
+                            </div>
+                    
+                          </div>
+    
+                           
+    
+                            </div>
+                            <!--Modal End-->
+    
+                          <br>
+                         {% if user.is_authenticated and request.user == event.creator.user %}
+                         <h5>Ticket Availability</h5>
+                         {% for ticket in tickets  %}
+                           <p> <strong>{{ticket}} ({{ticket.quantity}})</strong></p>
+                         {% endfor %}
+                         {% endif %}
+                        </div>
+                        
+                      </div>
+            </div>
+
+          <div class="mb-5">
+            <h3 class="h5 text-white mb-3">Search</h3>
+            <form action="#" method="post">
+              <div class="form-group d-flex">
+                <input type="text" class="form-control" placeholder="Search keyword and hit enter...">
+              </div>
+            </form>
+          </div>
+  
+  
+        </div>
+  
+      </div>
+    </div>
+  </div>
+
+
+  <div class="bg-primary" data-aos="fade">
+    <div class="container">
+      <div class="row">
+        <a href="#" class="col-2 text-center py-4 social-icon d-block"><span
+            class="icon-facebook text-white"></span></a>
+        <a href="#" class="col-2 text-center py-4 social-icon d-block"><span class="icon-twitter text-white"></span></a>
+        <a href="#" class="col-2 text-center py-4 social-icon d-block"><span
+            class="icon-instagram text-white"></span></a>
+        <a href="#" class="col-2 text-center py-4 social-icon d-block"><span
+            class="icon-linkedin text-white"></span></a>
+        <a href="#" class="col-2 text-center py-4 social-icon d-block"><span
+            class="icon-pinterest text-white"></span></a>
+        <a href="#" class="col-2 text-center py-4 social-icon d-block"><span class="icon-youtube text-white"></span></a>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

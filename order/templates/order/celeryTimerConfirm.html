@@ -1,16 +1,15 @@
-{% extends 'afriventapp/layout.html' %}
+{% extends 'afriventapp/event_app/layout.html' %}
 {% load static %}
 {% load event_extras %}
 {% block title%} {{user_profile.user.first_name | title }} Create Event | Afrivent {% endblock %}
-    {% block body %}
+{% block stylesheet %}<link href="{%static 'css/ticket.css'%}" rel="stylesheet">{% endblock %}
 
+
+{% block content %}
     <div class="container">
         <div class="confirm-order-class">
                 <div class="">Click the button below to confirm the order before the timer elapses <span class="clock" id="time"></span> else it will be cancelled automatically </div>
-        
-                
-               <a class="btn btn-danger confirm-order-link" href="{% url 'order:process' %}">Confirm Order</a> 
-
+                <a class="btn btn-danger confirm-order-link" href="{% url 'order:process' %}">Confirm Order</a> 
         </div>
 
     </div>

@@ -1,20 +1,10 @@
-{% extends 'afriventapp/layout.html' %}
+{% extends 'afriventapp/event_app/layout.html' %}
 {% load static %}
 
-{% block body %}
-
-
-    <main>
-
-        <section class="sign-in-container"> 
-            <div class="afri_text_background">
-
-                <h2>AFRIVENT</h2>
-
-            </div>
-            
-
+{% block content %}
+    <main class="center-flex">
             <div class="account-form container">
+                <h1 class="text-center text-white">LOGIN</h1>
                 <form method="POST"  class="">
                     {% csrf_token %}
                         <div class="form-group col-md-12">
@@ -27,15 +17,15 @@
                         <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
                         </div>
                         <div class="align_center ">
-                        <button type="submit" class="btn btn-primary account_btn">Sign In</button>
+                        <button type="submit" class="btn btn-primary ">Sign In</button>
                     </div>  
-                    <div class="align_center afri_text_color ">
-                    <a class="align_center afri_text_color " href="{% url 'account:register' %}"> Sign up </a> | 
-                    <a class="align_center afri_text_color" href="{% url 'password_reset' %}">Forgot Password? </a>
+                    <div class="align_center">
+                    <a class="align_center" href="{% url 'account:register' %}"> Sign up </a> | 
+                    <a class="align_center" href="{% url 'password_reset' %}">Forgot Password? </a>
                 </div>
                 </form>
             </div>
-        </section>
+  
    
 
     </main>
