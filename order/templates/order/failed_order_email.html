@@ -1,0 +1,22 @@
+Hi {{order.user}},
+
+For some reasons, your order for {{order.event.event_name}} failed.
+
+Below is the breakdown of the order
+
+<p>Ticket Type</p>
+<ul>
+    {% for order in order_items %}
+    <li>{{order.ticket}} - x{{order.quantity}}</li>
+    {% endfor %}
+</ul>
+
+Click <a href="{{order.authorization_url}}">Here</a> to try and order again.
+
+Thanks,
+
+The Afrivent Team
+
+
+
+
