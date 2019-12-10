@@ -165,4 +165,4 @@ EMAIL_HOST_PASSWORD = 'ignatius3151'
 EMAIL_PORT = 587
 
 # AUTH_USER_MODEL = "afriventapp.UserFlag" 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorag'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
