@@ -1,0 +1,1 @@
+web: gunicorn afrivent.wsgi --log-file -

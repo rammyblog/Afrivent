@@ -33,7 +33,7 @@ SECRET_KEY = 'rmery*!g(zz@d*&o=%y%_v0x9glm2$i46)dtvq7cfb6fnzz37r'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['afrivent.herokuapp.com']
 
 TIME_ZONE = 'UTC'
 # Application definition
@@ -58,6 +58,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -136,9 +137,12 @@ LOGIN_URL = 'account:login'
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
 
 # LOGOUT_REDIRECT_URL ='/'
 
@@ -161,3 +165,4 @@ EMAIL_HOST_PASSWORD = 'ignatius3151'
 EMAIL_PORT = 587
 
 # AUTH_USER_MODEL = "afriventapp.UserFlag" 
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorag'
