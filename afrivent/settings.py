@@ -161,8 +161,6 @@ CELERY_TASK_SERIALIZER = 'json'
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'onasanyatunde67@gmail.com'
-EMAIL_HOST_PASSWORD = 'ignatius3151'
 EMAIL_PORT = 587
 
 # AUTH_USER_MODEL = "afriventapp.UserFlag" 
