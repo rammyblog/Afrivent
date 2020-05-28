@@ -1,4 +1,5 @@
 amqp==2.5.1
+autopep8==1.5.2
 Babel==2.7.0
 billiard==3.6.1.0
 cairocffi==1.1.0
@@ -14,6 +15,7 @@ dj-database-url==0.5.0
 Django==2.2.5
 django-celery-beat==1.5.0
 django-celery-results==1.1.2
+django-environ==0.4.5
 django-phonenumber-field==3.0.1
 django-timezone-field==3.1
 django-widget-tweaks==1.4.5
@@ -28,7 +30,9 @@ kombu==4.6.5
 more-itertools==7.2.0
 phonenumbers==8.10.18
 Pillow==6.1.0
+pkg-resources==0.0.0
 psycopg2==2.8.4
+pycodestyle==2.6.0
 pycparser==2.19
 Pyphen==0.9.5
 pypng==0.0.20

@@ -1,0 +1,12 @@
+{% extends 'afriventapp/layout.html' %} {% block title %}Email Confirmed
+successful{% endblock %} {% block body %}
+<div class="wrapper">
+  <div class="alert alert-success" role="alert">
+    <strong>Success!</strong> Thank you for your email confirmation. Now you can
+    login your account.
+  </div>
+  <a href="{% url 'account:login' %}" class="btn btn-secondary"
+    >Login to your account</a
+  >
+</div>
+{% endblock %}
