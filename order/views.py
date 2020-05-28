@@ -8,7 +8,7 @@ from django.http import JsonResponse
 from python_paystack.objects.transactions import Transaction
 from python_paystack.managers import TransactionsManager
 from python_paystack.paystack_config import PaystackConfig
-from order.confirm_paystack_payment import confirmPaystackPayment
+from order.confirm_paystack_payment import confirmPaystackPayment, CustomPaystack
 from order.tasks import reconcileOrder
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
@@ -125,11 +125,11 @@ def processPayment(request):
     request.session['email_generate'] = True
     current_app.control.revoke(task_id)
     order = get_object_or_404(Order, pk=order_id)
-    PaystackConfig.SECRET_KEY = 'sk_test_4bc9c2030fe11485c51ce1692428ce37663c9d6c'
-    PaystackConfig.PUBLIC_KEY = 'pk_test_66242613f73c8034560a3eecf9d248787f776bdb'
+    PaystackConfig.SECRET_KEY = settings.PAYSTACK_SECRET_KEY
+    PaystackConfig.PUBLIC_KEY = settings.PAYSTACK_PUBLIC_KEY
     orderAmountKobo = order.total_cost * 100
     transaction = Transaction(orderAmountKobo, order.user.email)
-    transaction_manager = TransactionsManager()
+    transaction_manager = CustomPaystack()
     transaction = transaction_manager.initialize_transaction(
         'STANDARD', transaction)
     # request.session['transaction'] = transaction
